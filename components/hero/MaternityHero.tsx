@@ -86,7 +86,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
             style={{ backgroundImage: `url(${bgImage})` }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, transition: { duration: 2, ease: [0.25, 0.46, 0.45, 0.94] } }}
             transition={{ duration: 2, ease: [0.25, 0.46, 0.45, 0.94] }}
             aria-hidden
           />
@@ -99,20 +99,24 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
 
       <div className="relative z-10 flex flex-col">
         <div className="flex min-h-[min(55vh,480px)] flex-col items-start justify-center px-4 pt-16 pb-2 text-left sm:px-6 sm:pt-20 lg:px-8">
-          <div className="mx-auto w-full max-w-wrapper">
-            <motion.div
-              className="max-w-2xl"
-              initial={false}
-              animate="visible"
-              variants={{
-                visible: {
-                  transition: {
-                    staggerChildren: 0.072,
-                    delayChildren: 0.04,
+          <div className="mx-auto w-full max-w-wrapper relative min-h-[22rem] sm:min-h-[24rem]">
+            <AnimatePresence mode="sync">
+              <motion.div
+                key={active}
+                className="absolute left-0 top-0 max-w-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, transition: { duration: 2, ease: [0.25, 0.46, 0.45, 0.94] } }}
+                transition={{ duration: 2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                variants={{
+                  visible: {
+                    transition: {
+                      staggerChildren: 0.072,
+                      delayChildren: 0.04,
+                    },
                   },
-                },
-              }}
-            >
+                }}
+              >
                 <motion.div
                   className="mb-6 [&_svg]:h-20 [&_svg]:w-auto sm:[&_svg]:h-24"
                   initial={false}
@@ -121,7 +125,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
                     visible: {
                       opacity: 1,
                       y: 0,
-                      transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] },
+                      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
                     },
                   }}
                 >
@@ -135,7 +139,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
                     visible: {
                       opacity: 1,
                       y: 0,
-                      transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] },
+                      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
                     },
                   }}
                 >
@@ -151,13 +155,14 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
                     visible: {
                       opacity: 1,
                       y: 0,
-                      transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] },
+                      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
                     },
                   }}
                 >
                   {slide.subtitle}
                 </motion.p>
-            </motion.div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
