@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { Logo } from "./Logo";
+import { useEffect, useRef, useState } from "react";
 
 const TEAL = "#719B9A";
 const GRAY = "#4D5152";
@@ -20,28 +22,54 @@ const navLinks = [
 ];
 
 export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
+  const [topBarVisible, setTopBarVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY;
+      setTopBarVisible(y <= 20 || y < lastScrollY.current);
+      lastScrollY.current = y;
+    };
+    handleScroll(); // sync on mount
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className={overlay ? "absolute left-0 right-0 top-0 z-50" : ""}>
-      {/* Teal announcement bar — full width edge to edge */}
+    <header
+      className={`left-0 right-0 top-0 z-50 ${overlay ? "fixed" : "sticky"}`}
+    >
+      {/* Teal announcement bar — collapses on scroll so nav moves up */}
       <div
-        className="flex w-full items-center justify-center px-4 py-2 text-sm font-medium text-white sm:px-6 lg:px-8"
-        style={{ backgroundColor: TEAL }}
+        className="overflow-hidden transition-[height] duration-300 ease-out"
+        style={{ height: topBarVisible ? 40 : 0 }}
       >
-        <span className="opacity-90">Free shipping on all US orders</span>
-        <span aria-hidden className="ml-1">›</span>
+        <div
+          className="flex w-full items-center justify-center px-4 py-2 text-sm font-medium text-white sm:px-6 lg:px-8"
+          style={{ backgroundColor: TEAL }}
+        >
+          <span className="opacity-90">Free shipping on all US orders</span>
+          <span aria-hidden className="ml-1">›</span>
+        </div>
       </div>
 
-      {/* Main nav bar — full width edge to edge */}
+      {/* Main nav bar — fills space when top bar collapses */}
       <div
-        className={`flex w-full items-center justify-between px-4 py-4 sm:px-6 lg:px-8 ${overlay ? "bg-transparent" : "bg-white"}`}
+        className={`flex w-full items-center justify-between px-4 py-4 transition-colors duration-300 sm:px-6 lg:px-8 ${overlay && topBarVisible ? "bg-transparent" : "bg-white shadow-sm"}`}
       >
-        <Link
-          href="/"
-          className="text-xl font-bold tracking-tight"
-          style={{ color: GRAY }}
-        >
-          Breakout Bras
-        </Link>
+        <div className="flex shrink-0 items-center gap-4">
+          <Link href="/">
+            <Logo />
+          </Link>
+          <Link
+            href="#find-my-fit-quiz"
+            className="rounded-full px-5 py-2 text-sm font-semibold text-white"
+            style={{ backgroundColor: TEAL }}
+          >
+            Find My Fit
+          </Link>
+        </div>
 
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
             {navLinks.map((link) => (
@@ -57,13 +85,6 @@ export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
         </nav>
 
         <div className="flex items-center gap-4">
-            <Link
-              href="#find-my-fit-quiz"
-              className="rounded-full px-5 py-2 text-sm font-semibold text-white"
-              style={{ backgroundColor: TEAL }}
-            >
-              Find My Fit
-            </Link>
             <Link
               href="/bras"
               className="hidden text-sm font-medium sm:inline"

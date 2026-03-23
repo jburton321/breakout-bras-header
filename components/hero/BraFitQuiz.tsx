@@ -2,7 +2,14 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-const TOTAL_STEPS = 9;
+const TOTAL_STEPS = 10;
+
+const BRA_SITUATIONS = [
+  "I'm recovering from surgery and need extra support.",
+  "I'm pregnant or nursing.",
+  "My body has been changing and my fit has too.",
+  "None of the above.",
+];
 
 const BRABLEMS = [
   "More Lift",
@@ -75,6 +82,7 @@ export function BraFitQuiz() {
   const [braAge, setBraAge] = useState("");
   const [underwearStyles, setUnderwearStyles] = useState<string[]>([]);
   const [underwearSize, setUnderwearSize] = useState("");
+  const [braSituation, setBraSituation] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
@@ -106,6 +114,8 @@ export function BraFitQuiz() {
       case 8:
         return underwearStyles.length > 0 && underwearSize !== "";
       case 9:
+        return braSituation !== "";
+      case 10:
         return email.includes("@") && email.includes(".");
       default:
         return false;
@@ -121,6 +131,7 @@ export function BraFitQuiz() {
     braAge,
     underwearStyles,
     underwearSize,
+    braSituation,
     email,
   ]);
 
@@ -129,15 +140,15 @@ export function BraFitQuiz() {
   const card = (sel: boolean) =>
     `cursor-pointer rounded-lg border px-4 py-4 text-center text-sm font-medium transition ${
       sel
-        ? "border-[#3b3a36] bg-[#3b3a36] text-white"
-        : "border-[#ddd] bg-white hover:border-[#a49184] hover:bg-[#f7ede2]"
+        ? "border-[#719B9A] bg-[#719B9A] text-white"
+        : "border-[#ddd] bg-white hover:border-[#719B9A] hover:bg-[#f0f6f6]"
     }`;
 
   return (
-    <div className="w-full rounded-2xl bg-white p-6 text-[#3b3a36] shadow-xl sm:p-8 md:p-10">
+    <div className="w-full rounded-2xl border border-white/20 bg-white/70 p-6 text-[#3b3a36] backdrop-blur-xl backdrop-saturate-150 sm:p-8 md:p-10">
       <div className="mb-6 h-1 w-full overflow-hidden rounded-full bg-[#eee]">
         <div
-          className="h-full bg-[#a49184] transition-[width] duration-300"
+          className="h-full bg-[#719B9A] transition-[width] duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -146,7 +157,7 @@ export function BraFitQuiz() {
         <button
           type="button"
           onClick={() => setStep((s) => s - 1)}
-          className="mb-5 border-0 bg-transparent text-sm font-medium text-[#a49184] hover:text-[#3b3a36]"
+          className="mb-5 border-0 bg-transparent text-sm font-medium text-[#719B9A] hover:text-[#5a8584]"
         >
           ← Back
         </button>
@@ -165,7 +176,7 @@ export function BraFitQuiz() {
                 <select
                   value={bandSize}
                   onChange={(e) => setBandSize(e.target.value)}
-                  className="rounded-lg border border-[#ddd] bg-white px-4 py-3.5 outline-none focus:border-[#a49184]"
+                  className="rounded-lg border border-[#ddd] bg-white px-4 py-3.5 outline-none focus:border-[#719B9A]"
                 >
                   <option value="">Select</option>
                   {BAND_SIZES.map((b) => (
@@ -180,7 +191,7 @@ export function BraFitQuiz() {
                 <select
                   value={cupSize}
                   onChange={(e) => setCupSize(e.target.value)}
-                  className="rounded-lg border border-[#ddd] bg-white px-4 py-3.5 outline-none focus:border-[#a49184]"
+                  className="rounded-lg border border-[#ddd] bg-white px-4 py-3.5 outline-none focus:border-[#719B9A]"
                 >
                   <option value="">-</option>
                   {CUP_SIZES.map((c) => (
@@ -266,7 +277,7 @@ export function BraFitQuiz() {
                 max={5}
                 value={cupFit}
                 onChange={(e) => setCupFit(e.target.value)}
-                className="mb-2 mt-6 h-1.5 w-full cursor-pointer appearance-none rounded bg-[#ddd] accent-[#3b3a36]"
+                className="mb-2 mt-6 h-1.5 w-full cursor-pointer appearance-none rounded bg-[#ddd] accent-[#719B9A]"
               />
               <div className="flex justify-between text-xs text-[#666]">
                 <span>Too small</span>
@@ -287,7 +298,7 @@ export function BraFitQuiz() {
                 max={5}
                 value={bandFit}
                 onChange={(e) => setBandFit(e.target.value)}
-                className="mb-2 mt-6 h-1.5 w-full cursor-pointer appearance-none rounded bg-[#ddd] accent-[#3b3a36]"
+                className="mb-2 mt-6 h-1.5 w-full cursor-pointer appearance-none rounded bg-[#ddd] accent-[#719B9A]"
               />
             </div>
             <h3 className="mb-4 text-lg font-medium">What hook are you on?</h3>
@@ -358,6 +369,24 @@ export function BraFitQuiz() {
 
         {step === 9 && (
           <div>
+            <h2 className="mb-2 text-2xl font-semibold">What&apos;s your current bra situation?</h2>
+            <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {BRA_SITUATIONS.map((o) => (
+                <button
+                  key={o}
+                  type="button"
+                  onClick={() => setBraSituation(o)}
+                  className={card(braSituation === o)}
+                >
+                  {o}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step === 10 && (
+          <div>
             <h2 className="mb-2 text-2xl font-semibold">Your new fit is ready!</h2>
             <p className="mb-6 text-sm text-[#666]">
               $20 off your first purchase!
@@ -368,14 +397,14 @@ export function BraFitQuiz() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email Address"
               required
-              className="mb-4 w-full rounded-lg border border-[#ddd] px-4 py-3.5 outline-none focus:border-[#a49184]"
+              className="mb-4 w-full rounded-lg border border-[#ddd] px-4 py-3.5 outline-none focus:border-[#719B9A]"
             />
             <input
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Phone (optional)"
-              className="w-full rounded-lg border border-[#ddd] px-4 py-3.5 outline-none focus:border-[#a49184]"
+              className="w-full rounded-lg border border-[#ddd] px-4 py-3.5 outline-none focus:border-[#719B9A]"
             />
           </div>
         )}
@@ -387,7 +416,7 @@ export function BraFitQuiz() {
             type="button"
             disabled={!canNext}
             onClick={() => setStep((s) => s + 1)}
-            className="w-full rounded-full bg-[#3b3a36] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:bg-[#ccc]"
+            className="w-full rounded-full bg-[#719B9A] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed"
           >
             NEXT
           </button>
@@ -396,10 +425,10 @@ export function BraFitQuiz() {
             type="button"
             disabled={!canNext}
             onClick={() => {
-              console.log({ bandSize, cupSize, brablems, styles, preferences, email, phone });
+              console.log({ bandSize, cupSize, brablems, styles, preferences, braSituation, email, phone });
               alert("Quiz Submitted! Check console.");
             }}
-            className="w-full rounded-full bg-[#3b3a36] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:bg-[#ccc]"
+            className="w-full rounded-full bg-[#719B9A] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed"
           >
             GET RESULTS
           </button>
