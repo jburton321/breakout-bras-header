@@ -19,7 +19,7 @@ const SLIDES: Array<{
     subtitle: "Discover sizes that celebrate your shape and give superior lift and containment.",
     label: "Shop Bras",
     href: "/bras",
-    backgroundImage: "/images/slide1.png",
+    backgroundImage: "/images/Slide1.png",
   },
   {
     id: "fitting",
@@ -27,7 +27,7 @@ const SLIDES: Array<{
     subtitle: "Reserve your spot for in-store or virtual fitting with our expert team.",
     label: "Book a Fitting",
     href: "/appointments",
-    backgroundImage: "/images/slide2.png",
+    backgroundImage: "/images/Slide2.png",
   },
   {
     id: "sports",
@@ -35,7 +35,7 @@ const SLIDES: Array<{
     subtitle: "Sports bras that move with you—unbeatable support, comfort, and real lift.",
     label: "Sports Bras",
     href: "/bras",
-    backgroundImage: "/images/slide3.png",
+    backgroundImage: "/images/Slide3.png",
   },
 ];
 
