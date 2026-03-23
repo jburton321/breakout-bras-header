@@ -7,20 +7,6 @@ import { useEffect, useRef, useState } from "react";
 const TEAL = "#719B9A";
 const GRAY = "#4D5152";
 
-const navLinks = [
-  { label: "Bras", href: "/bras" },
-  { label: "Panties", href: "/panties" },
-  { label: "Swimwear", href: "/swimwear" },
-  { label: "Lounge and Lingerie", href: "/lounge-lingerie" },
-  { label: "Post-Op", href: "/post-op" },
-  { label: "Shapewear", href: "/shapewear" },
-  { label: "Maternity/Nursing", href: "/maternity-nursing" },
-  { label: "Bridal", href: "/bridal" },
-  { label: "Accessories", href: "/accessories" },
-  { label: "Sale", href: "/sale" },
-  { label: "Shop by Brand", href: "/shop-by-brand" },
-];
-
 export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
   const [topBarVisible, setTopBarVisible] = useState(true);
   const lastScrollY = useRef(0);
@@ -58,31 +44,9 @@ export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
       <div
         className={`flex w-full items-center justify-between px-4 py-4 transition-colors duration-300 sm:px-6 lg:px-8 ${overlay && topBarVisible ? "bg-transparent" : "bg-white shadow-sm"}`}
       >
-        <div className="flex shrink-0 items-center gap-4">
-          <Link href="/">
-            <Logo />
-          </Link>
-          <Link
-            href="#find-my-fit-quiz"
-            className="rounded-full px-5 py-2 text-sm font-semibold text-white"
-            style={{ backgroundColor: TEAL }}
-          >
-            Find My Fit
-          </Link>
-        </div>
-
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium transition hover:opacity-80"
-                style={{ color: GRAY }}
-              >
-                {link.label}
-              </Link>
-            ))}
-        </nav>
+        <Link href="/" className="flex shrink-0">
+          <Logo />
+        </Link>
 
         <div className="flex items-center gap-4">
             <Link
@@ -118,6 +82,13 @@ export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
                 <CartIcon className="h-5 w-5" />
               </button>
             </div>
+            <Link
+              href="#find-my-fit-quiz"
+              className="rounded-full px-5 py-2 text-sm font-semibold text-white"
+              style={{ backgroundColor: TEAL }}
+            >
+              Find My Fit
+            </Link>
         </div>
       </div>
     </header>

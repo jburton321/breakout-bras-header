@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Logo } from "@/components/breakout-bras/Logo";
 import { BraFitQuiz } from "./BraFitQuiz";
 
 const SLIDES: Array<{
@@ -78,7 +78,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
   return (
     <section className="relative w-full overflow-hidden" aria-label="Featured">
       {/* Background image — per-slide when defined, spans full hero + quiz */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="sync">
         {bgImage && (
           <motion.div
             key={bgImage}
@@ -87,7 +87,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease: "easeInOut" }}
+            transition={{ duration: 2, ease: [0.25, 0.46, 0.45, 0.94] }}
             aria-hidden
           />
         )}
@@ -98,10 +98,10 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
       />
 
       <div className="relative z-10 flex flex-col">
-        <div className="flex min-h-[min(55vh,480px)] flex-col items-start justify-center px-4 pt-52 pb-6 text-left sm:px-6 sm:pt-56 lg:px-8">
+        <div className="flex min-h-[min(55vh,480px)] flex-col items-start justify-center px-4 pt-16 pb-2 text-left sm:px-6 sm:pt-20 lg:px-8">
           <div className="mx-auto w-full max-w-wrapper">
             <motion.div
-              className="max-w-xl"
+              className="max-w-2xl"
               initial={false}
               animate="visible"
               variants={{
@@ -113,6 +113,20 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
                 },
               }}
             >
+                <motion.div
+                  className="mb-6 [&_svg]:h-20 [&_svg]:w-auto sm:[&_svg]:h-24"
+                  initial={false}
+                  variants={{
+                    hidden: { opacity: 0, y: 24 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                >
+                  <Logo />
+                </motion.div>
                 <motion.h1
                   className="min-h-[2.2em] text-4xl font-bold tracking-tight text-neutral-900 sm:text-5xl md:text-6xl"
                   initial={false}
@@ -130,7 +144,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
                   {slide.title[1]}
                 </motion.h1>
                 <motion.p
-                  className="mt-2 min-h-[3em] max-w-md text-base text-neutral-800 sm:text-lg md:text-xl"
+                  className="mt-2 min-h-[3em] max-w-lg text-base text-neutral-800 sm:text-lg md:text-xl"
                   initial={false}
                   variants={{
                     hidden: { opacity: 0, y: 18 },
@@ -143,26 +157,6 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
                 >
                   {slide.subtitle}
                 </motion.p>
-                <motion.div
-                  className="mt-5 flex justify-start"
-                  initial={false}
-                  variants={{
-                    hidden: { opacity: 0, y: 14 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] },
-                    },
-                  }}
-                >
-                  <Link
-                    href="#find-my-fit-quiz"
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#719B9A] px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5a8584]"
-                  >
-                    Find My Fit
-                    <span aria-hidden>›</span>
-                  </Link>
-                </motion.div>
             </motion.div>
           </div>
         </div>
@@ -170,7 +164,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
         {/* Quiz — part of hero section */}
         <div
           id="find-my-fit-quiz"
-          className="scroll-mt-24 w-full px-4 pb-16 pt-2 sm:px-6 sm:pb-8 lg:px-8"
+          className="scroll-mt-24 w-full px-4 pb-16 pt-0 sm:px-6 sm:pb-8 lg:px-8"
         >
           <div className="mx-auto w-full max-w-wrapper">
             <BraFitQuiz />
