@@ -148,8 +148,8 @@ export function MaternityHero() {
         </div>
 
         {/* Progress bars */}
-        <div className="px-4 pb-6 pt-4 sm:px-8 sm:pb-8 md:px-12">
-          <div className="mx-auto flex max-w-[1600px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+        <div className="px-4 pb-6 pt-4 sm:px-6 sm:pb-8 lg:px-8">
+          <div className="mx-auto flex max-w-wrapper flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <div className="min-w-0 flex-1">
               <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-4 sm:gap-x-4">
                 {SLIDES.map((item, index) => (
@@ -185,12 +185,12 @@ export function MaternityHero() {
           </div>
         </div>
 
-        {/* Quiz */}
+        {/* Quiz — full width within content wrapper */}
         <div
           id="find-my-fit-quiz"
-          className="scroll-mt-24 px-4 pb-16 pt-2 sm:px-8 md:px-12 lg:px-16"
+          className="scroll-mt-24 w-full px-4 pb-16 pt-2 sm:px-6 sm:pb-8 lg:px-8"
         >
-          <div className="mx-auto w-full max-w-[1600px]">
+          <div className="mx-auto w-full max-w-wrapper">
             <BraFitQuiz />
           </div>
         </div>

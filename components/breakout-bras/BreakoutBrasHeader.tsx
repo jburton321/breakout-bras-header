@@ -7,39 +7,43 @@ const GRAY = "#4D5152";
 
 const navLinks = [
   { label: "Bras", href: "/bras" },
-  { label: "Nursing", href: "/nursing" },
-  { label: "Sports", href: "/sports" },
-  { label: "Swim", href: "/swim" },
-  { label: "Underwear", href: "/underwear" },
+  { label: "Panties", href: "/panties" },
+  { label: "Swimwear", href: "/swimwear" },
+  { label: "Lounge and Lingerie", href: "/lounge-lingerie" },
+  { label: "Post-Op", href: "/post-op" },
+  { label: "Shapewear", href: "/shapewear" },
+  { label: "Maternity/Nursing", href: "/maternity-nursing" },
+  { label: "Bridal", href: "/bridal" },
+  { label: "Accessories", href: "/accessories" },
   { label: "Sale", href: "/sale" },
+  { label: "Shop by Brand", href: "/shop-by-brand" },
 ];
 
 export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
   return (
     <header className={overlay ? "absolute left-0 right-0 top-0 z-50" : ""}>
-      {/* Teal announcement bar */}
+      {/* Teal announcement bar — full width edge to edge */}
       <div
-        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white"
+        className="flex w-full items-center justify-center px-4 py-2 text-sm font-medium text-white sm:px-6 lg:px-8"
         style={{ backgroundColor: TEAL }}
       >
         <span className="opacity-90">Free shipping on all US orders</span>
-        <span aria-hidden>›</span>
+        <span aria-hidden className="ml-1">›</span>
       </div>
 
-      {/* Main nav bar */}
+      {/* Main nav bar — full width edge to edge */}
       <div
-        className={`flex items-center justify-between px-4 py-4 ${overlay ? "bg-transparent" : "bg-white"} sm:px-6 lg:px-8`}
+        className={`flex w-full items-center justify-between px-4 py-4 sm:px-6 lg:px-8 ${overlay ? "bg-transparent" : "bg-white"}`}
       >
-        <div className="mx-auto flex w-full max-w-content items-center justify-between">
-          <Link
-            href="/"
-            className="text-xl font-bold tracking-tight"
-            style={{ color: GRAY }}
-          >
-            Breakout Bras
-          </Link>
+        <Link
+          href="/"
+          className="text-xl font-bold tracking-tight"
+          style={{ color: GRAY }}
+        >
+          Breakout Bras
+        </Link>
 
-          <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -50,9 +54,9 @@ export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
                 {link.label}
               </Link>
             ))}
-          </nav>
+        </nav>
 
-          <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
             <Link
               href="#find-my-fit-quiz"
               className="rounded-full px-5 py-2 text-sm font-semibold text-white"
@@ -93,7 +97,6 @@ export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
                 <CartIcon className="h-5 w-5" />
               </button>
             </div>
-          </div>
         </div>
       </div>
     </header>

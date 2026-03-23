@@ -9,6 +9,7 @@ export default {
     extend: {
       maxWidth: {
         content: "var(--content-width, 1600px)",
+        wrapper: "var(--content-wrapper, 1320px)",
       },
       colors: {
         breakout: {

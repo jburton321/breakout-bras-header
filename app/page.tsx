@@ -9,7 +9,7 @@ export default function Home() {
         <BreakoutBrasHeader overlay />
         <MaternityHero />
       </div>
-      <main className="mx-auto max-w-[1320px] px-4 py-16 text-center text-sm text-[#4D5152] sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-wrapper px-4 py-16 text-center text-sm text-[#4D5152] sm:px-6 lg:px-8">
         <p>More content below the hero.</p>
       </main>
       <Footer />

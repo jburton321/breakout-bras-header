@@ -4,6 +4,7 @@
 
 :root {
   --content-width: 1600px;
+  --content-wrapper: 1320px;
   --background: #ffffff;
   --foreground: #4D5152;
 }

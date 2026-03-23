@@ -134,7 +134,7 @@ export function BraFitQuiz() {
     }`;
 
   return (
-    <div className="w-full max-w-[600px] rounded-2xl bg-white p-8 text-[#3b3a36] shadow-xl sm:p-10">
+    <div className="w-full rounded-2xl bg-white p-6 text-[#3b3a36] shadow-xl sm:p-8 md:p-10">
       <div className="mb-6 h-1 w-full overflow-hidden rounded-full bg-[#eee]">
         <div
           className="h-full bg-[#a49184] transition-[width] duration-300"
