@@ -25,15 +25,6 @@ const helpLinks = [
   { label: "Virtual Fitting", href: "/virtual-fitting" },
 ];
 
-const socialLinks = [
-  { label: "Facebook", href: "https://facebook.com/breakoutbras" },
-  { label: "Twitter", href: "https://twitter.com/breakoutbras" },
-  { label: "Pinterest", href: "https://pinterest.com/breakoutbras" },
-  { label: "Instagram", href: "https://instagram.com/breakoutbras" },
-  { label: "Snapchat", href: "https://snapchat.com/add/breakoutbras" },
-  { label: "YouTube", href: "https://youtube.com/breakoutbras" },
-];
-
 function LocationIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -71,7 +62,21 @@ export function Footer() {
   return (
     <footer className="bg-white" style={{ color: TEAL }}>
       <div className="mx-auto max-w-wrapper px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="min-w-0">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider">
+              Logo
+            </h3>
+            <Link href="/" className="inline-block max-w-full">
+              <img
+                src="/logo/logo-grey.svg"
+                alt="Breakout Bras"
+                width={776}
+                height={167}
+                className="block h-10 w-auto max-w-full sm:h-12"
+              />
+            </Link>
+          </div>
           <div>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider">
               Quick Links
@@ -96,25 +101,6 @@ export function Footer() {
                   <Link href={link.href} className="text-sm hover:underline">
                     {link.label}
                   </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider">
-              Socials
-            </h3>
-            <ul className="space-y-3">
-              {socialLinks.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm hover:underline"
-                  >
-                    {link.label}
-                  </a>
                 </li>
               ))}
             </ul>

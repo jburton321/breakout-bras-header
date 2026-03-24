@@ -177,12 +177,12 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
         </div>
 
         {/* Progress bars */}
-        <div className="w-full px-4 pb-6 pt-4 sm:px-6 sm:pb-8 lg:px-8">
+        <div className="w-full px-4 pb-4 pt-2 sm:px-6 sm:pb-6 lg:px-8">
           <div className="mx-auto w-full max-w-wrapper">
-            <div className="rounded-2xl border border-white/20 bg-white/70 p-6 backdrop-blur-xl backdrop-saturate-150 sm:p-8">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+            <div className="rounded-2xl border border-white/20 bg-white/70 px-5 py-3 backdrop-blur-xl backdrop-saturate-150 sm:px-6 sm:py-4">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
                 <div className="min-w-0 flex-1">
-                  <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4">
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-2 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-2">
                     {SLIDES.map((item, index) => (
                       <button
                         key={item.id}
@@ -192,23 +192,25 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
                         aria-current={index === active}
                         aria-label={`Show ${item.label}`}
                       >
-                        <div className="relative mb-3 h-1 w-full overflow-hidden rounded-full bg-neutral-300">
-                          {index === active && (
-                            <div
-                              className="absolute inset-y-0 left-0 rounded-full bg-neutral-700 transition-[width] duration-75 ease-linear"
-                              style={{ width: `${progress}%` }}
-                            />
-                          )}
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`shrink-0 text-left text-[10px] sm:text-[11px] md:text-xs ${
+                              index === active
+                                ? "font-semibold text-neutral-900"
+                                : "font-normal text-neutral-600 group-hover:text-neutral-800"
+                            }`}
+                          >
+                            {item.label}
+                          </span>
+                          <div className="relative h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-neutral-300">
+                            {index === active && (
+                              <div
+                                className="absolute inset-y-0 left-0 rounded-full bg-neutral-700 transition-[width] duration-75 ease-linear"
+                                style={{ width: `${progress}%` }}
+                              />
+                            )}
+                          </div>
                         </div>
-                        <span
-                          className={`block text-[10px] sm:text-[11px] md:text-xs ${
-                            index === active
-                              ? "font-semibold text-neutral-900"
-                              : "font-normal text-neutral-600 group-hover:text-neutral-800"
-                          }`}
-                        >
-                          {item.label}
-                        </span>
                       </button>
                     ))}
                   </div>
