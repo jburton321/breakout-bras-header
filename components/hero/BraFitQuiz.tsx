@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 
-const TOTAL_STEPS = 10;
+const TOTAL_STEPS = 11;
+
+/** Store visit address when customer chooses in-person fitting (step 1). */
+const IN_PERSON_FITTING_ADDRESS = "525 Haywood Rd, Greenville, SC 29607";
 
 const BRA_SITUATIONS = [
   "I'm recovering from surgery and need extra support.",
@@ -201,6 +204,7 @@ function ConfirmationBookingScheduler() {
 export function BraFitQuiz() {
   const [step, setStep] = useState(1);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [fittingType, setFittingType] = useState<"virtual" | "in-person" | "">("");
   const [bandSize, setBandSize] = useState("");
   const [cupSize, setCupSize] = useState("");
   const [brablems, setBrablems] = useState<string[]>([]);
@@ -232,24 +236,26 @@ export function BraFitQuiz() {
   const canNext = useMemo(() => {
     switch (step) {
       case 1:
-        return bandSize && cupSize;
+        return fittingType !== "";
       case 2:
-        return brablems.length > 0;
+        return Boolean(bandSize && cupSize);
       case 3:
-        return styles.length > 0;
+        return brablems.length > 0;
       case 4:
-        return preferences.length > 0;
+        return styles.length > 0;
       case 5:
-        return true;
+        return preferences.length > 0;
       case 6:
-        return hookUsage !== "";
+        return true;
       case 7:
-        return braAge !== "";
+        return hookUsage !== "";
       case 8:
-        return underwearStyles.length > 0 && underwearSize !== "";
+        return braAge !== "";
       case 9:
-        return braSituation !== "";
+        return underwearStyles.length > 0 && underwearSize !== "";
       case 10:
+        return braSituation !== "";
+      case 11:
         return (
           firstName.trim().length > 0 &&
           lastName.trim().length > 0 &&
@@ -263,6 +269,7 @@ export function BraFitQuiz() {
     }
   }, [
     step,
+    fittingType,
     bandSize,
     cupSize,
     brablems,
@@ -284,6 +291,13 @@ export function BraFitQuiz() {
 
   const quizPayload = useMemo(
     () => ({
+      fittingType,
+      fittingLabel:
+        fittingType === "virtual"
+          ? "Virtual fitting"
+          : fittingType === "in-person"
+            ? `In person · ${IN_PERSON_FITTING_ADDRESS}`
+            : "",
       bandSize,
       cupSize,
       brablems,
@@ -306,6 +320,7 @@ export function BraFitQuiz() {
       marketingConsent,
     }),
     [
+      fittingType,
       bandSize,
       cupSize,
       brablems,
@@ -330,6 +345,7 @@ export function BraFitQuiz() {
   const resetQuiz = useCallback(() => {
     setShowConfirmation(false);
     setStep(1);
+    setFittingType("");
     setBandSize("");
     setCupSize("");
     setBrablems([]);
@@ -352,6 +368,13 @@ export function BraFitQuiz() {
 
   const card = (sel: boolean) =>
     `cursor-pointer rounded-lg border px-4 py-4 text-center text-sm font-medium transition ${
+      sel
+        ? "border-[#719B9A] bg-[#719B9A] text-white"
+        : "border-[#ddd] bg-white hover:border-[#719B9A] hover:bg-[#f0f6f6]"
+    }`;
+
+  const fittingCard = (sel: boolean) =>
+    `flex w-full cursor-pointer flex-col items-start rounded-lg border px-4 py-4 text-left text-sm font-medium transition ${
       sel
         ? "border-[#719B9A] bg-[#719B9A] text-white"
         : "border-[#ddd] bg-white hover:border-[#719B9A] hover:bg-[#f0f6f6]"
@@ -447,6 +470,10 @@ export function BraFitQuiz() {
               </div>
               <dl className="divide-y divide-neutral-100 text-xs leading-snug sm:text-[13px]">
                 <div className="grid gap-0.5 py-1.5 first:pt-0 sm:grid-cols-[minmax(0,9.5rem)_1fr] sm:gap-x-3">
+                  <dt className="font-medium text-neutral-500">Fitting</dt>
+                  <dd className="text-neutral-800">{quizPayload.fittingLabel}</dd>
+                </div>
+                <div className="grid gap-0.5 py-1.5 sm:grid-cols-[minmax(0,9.5rem)_1fr] sm:gap-x-3">
                   <dt className="font-medium text-neutral-500">Current bra size</dt>
                   <dd className="font-medium text-neutral-900">
                     {quizPayload.bandSize} {quizPayload.cupSize}
@@ -561,7 +588,7 @@ export function BraFitQuiz() {
                 type="button"
                 onClick={() => {
                   setShowConfirmation(false);
-                  setStep(10);
+                  setStep(11);
                 }}
                 className="rounded-full border-2 border-[#719B9A] bg-white px-6 py-2.5 text-sm font-semibold text-[#719B9A] shadow-sm transition hover:bg-[#f0f6f6]"
               >
@@ -581,6 +608,45 @@ export function BraFitQuiz() {
         <>
       <form onSubmit={(e) => e.preventDefault()}>
         {step === 1 && (
+          <div>
+            <h2 className="mb-2 text-2xl font-semibold">How would you like to get fitted?</h2>
+            <p className="mb-6 text-sm text-[#666]">
+              Choose a virtual fitting or visit us in store.
+            </p>
+            <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => setFittingType("virtual")}
+                className={fittingCard(fittingType === "virtual")}
+              >
+                <span className="font-semibold">Virtual fitting</span>
+                <span
+                  className={`mt-1 block text-xs leading-snug ${
+                    fittingType === "virtual" ? "text-white/90" : "text-[#666]"
+                  }`}
+                >
+                  One-on-one with a fitter online from home.
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFittingType("in-person")}
+                className={fittingCard(fittingType === "in-person")}
+              >
+                <span className="font-semibold">In person</span>
+                <span
+                  className={`mt-1 block text-xs leading-snug ${
+                    fittingType === "in-person" ? "text-white/90" : "text-[#666]"
+                  }`}
+                >
+                  {IN_PERSON_FITTING_ADDRESS}
+                </span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === 2 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">What is your current bra size?</h2>
             <p className="mb-6 text-sm text-[#666]">
@@ -624,7 +690,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 2 && (
+        {step === 3 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">Got a bra-blem? We have a solution.</h2>
             <p className="mb-6 text-sm text-[#666]">Select up to 2</p>
@@ -643,7 +709,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 3 && (
+        {step === 4 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">Which styles are you looking for?</h2>
             <p className="mb-6 text-sm text-[#666]">Select up to 2</p>
@@ -662,7 +728,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 4 && (
+        {step === 5 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">
               All of our bras are comfy. What else matters?
@@ -683,7 +749,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 5 && (
+        {step === 6 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">How do your cups fit?</h2>
             <div className="mb-8 px-2">
@@ -704,7 +770,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 6 && (
+        {step === 7 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">How does your band fit?</h2>
             <div className="mb-6">
@@ -733,7 +799,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 7 && (
+        {step === 8 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">How old is your go-to bra?</h2>
             <div className="mb-6 grid grid-cols-2 gap-3">
@@ -751,7 +817,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 8 && (
+        {step === 9 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">We make underwear too!</h2>
             <p className="mb-4 text-sm text-[#666]">Select up to 2</p>
@@ -783,7 +849,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 9 && (
+        {step === 10 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">What&apos;s your current bra situation?</h2>
             <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -801,7 +867,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 10 && (
+        {step === 11 && (
           <div>
             <h2 className="mb-3 text-2xl font-semibold">Your new fit is ready!</h2>
             <div className="mb-6 rounded-xl border border-[#719B9A]/25 bg-gradient-to-br from-[#f4faf9] to-white px-4 py-3.5 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset] sm:px-5">
