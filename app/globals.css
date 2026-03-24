@@ -13,3 +13,75 @@ body {
   color: var(--foreground);
   background: var(--background);
 }
+
+/* Animated bird — paths & paint order from Watermark_animated.html */
+.logo-animated-bird .butterfly-frame {
+  perspective: 1200px;
+}
+
+.logo-animated-bird .wing-l,
+.logo-animated-bird .wing-r {
+  transform-origin: 125px center;
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  animation-direction: alternate;
+}
+
+.logo-animated-bird .wing-l {
+  animation-name: flap-l;
+}
+
+.logo-animated-bird .wing-r {
+  animation-name: flap-r;
+}
+
+@keyframes flap-l {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(70deg);
+  }
+}
+
+@keyframes flap-r {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(-70deg);
+  }
+}
+
+.logo-animated-bird .cls-1 {
+  fill: #fff;
+}
+
+.logo-animated-bird .cls-2 {
+  fill: #6b9ea0;
+}
+
+.logo-animated-bird .cls-3 {
+  fill: #6e6e6e;
+}
+
+/* Hero headline: fade-in on slide change only (no exit layer — avoids overlap bugs) */
+@keyframes hero-slide-copy-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-slide-copy-in {
+  animation: hero-slide-copy-in 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide-copy-in {
+    animation-duration: 0.01ms;
+  }
+}

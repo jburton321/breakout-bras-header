@@ -64,9 +64,6 @@ export function Footer() {
       <div className="mx-auto max-w-wrapper px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="min-w-0">
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider">
-              Logo
-            </h3>
             <Link href="/" className="inline-block max-w-full">
               <img
                 src="/logo/logo-grey.svg"
@@ -76,6 +73,34 @@ export function Footer() {
                 className="block h-10 w-auto max-w-full sm:h-12"
               />
             </Link>
+            <div className="mt-6 space-y-3 text-sm">
+              <p className="flex items-start gap-3">
+                <LocationIcon className="mt-0.5 h-5 w-5 shrink-0" />
+                525 Haywood Rd, Greenville, SC 29607
+              </p>
+              <p className="flex items-center gap-3">
+                <PhoneIcon className="h-5 w-5 shrink-0" />
+                <a href="tel:+18646270200" className="hover:underline">
+                  1-864-627-0200
+                </a>
+              </p>
+              <p className="flex items-center gap-3">
+                <EmailIcon className="h-5 w-5 shrink-0" />
+                <a href="mailto:service@breakoutbras.com" className="hover:underline">
+                  service@breakoutbras.com
+                </a>
+              </p>
+              <div className="flex items-start gap-3">
+                <ClockIcon className="mt-0.5 h-5 w-5 shrink-0" />
+                <div>
+                  <p className="font-medium">Retail Store Hours (EST):</p>
+                  <p>Monday–Thursday 12–7, Friday and Sat 10–6.</p>
+                  <p className="italic">Last fitting is an hour before closing.</p>
+                  <p className="mt-2 font-medium">Customer Service Hours (EST):</p>
+                  <p>Monday–Friday 9–5.</p>
+                </div>
+              </div>
+            </div>
           </div>
           <div>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider">
@@ -130,34 +155,6 @@ export function Footer() {
                 Sign Up
               </button>
             </form>
-            <div className="space-y-3 text-sm">
-              <p className="flex items-start gap-3">
-                <LocationIcon className="mt-0.5 h-5 w-5 shrink-0" />
-                525 Haywood Rd, Greenville, SC 29607
-              </p>
-              <p className="flex items-center gap-3">
-                <PhoneIcon className="h-5 w-5 shrink-0" />
-                <a href="tel:+18646270200" className="hover:underline">
-                  1-864-627-0200
-                </a>
-              </p>
-              <p className="flex items-center gap-3">
-                <EmailIcon className="h-5 w-5 shrink-0" />
-                <a href="mailto:service@breakoutbras.com" className="hover:underline">
-                  service@breakoutbras.com
-                </a>
-              </p>
-              <div className="flex items-start gap-3">
-                <ClockIcon className="mt-0.5 h-5 w-5 shrink-0" />
-                <div>
-                  <p className="font-medium">Retail Store Hours (EST):</p>
-                  <p>Monday–Thursday 12–7, Friday and Sat 10–6.</p>
-                  <p className="italic">Last fitting is an hour before closing.</p>
-                  <p className="mt-2 font-medium">Customer Service Hours (EST):</p>
-                  <p>Monday–Friday 9–5.</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 

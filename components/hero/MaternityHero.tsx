@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Logo } from "@/components/breakout-bras/Logo";
 import { BraFitQuiz } from "./BraFitQuiz";
 
@@ -40,9 +39,11 @@ const SLIDES: Array<{
 ];
 
 const ROTATE_MS = 6500;
+const BG_CROSSFADE_MS = 2000;
+
+const BG_EASE = "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 
 type MaternityHeroProps = {
-  /** Fallback background when a slide has no backgroundImage */
   backgroundImage?: string;
 };
 
@@ -59,7 +60,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
   }, []);
 
   useEffect(() => {
-    const id = window.setInterval(() => {
+    const tick = () => {
       const elapsed = Date.now() - startTimeRef.current;
       const p = Math.min(100, (elapsed / ROTATE_MS) * 100);
       setProgress(p);
@@ -68,105 +69,71 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
         setProgress(0);
         startTimeRef.current = Date.now();
       }
-    }, 50);
+    };
+    const id = window.setInterval(tick, 50);
     return () => window.clearInterval(id);
-  }, [active]);
+  }, []);
 
   const slide = SLIDES[active];
-  const bgImage = slide.backgroundImage ?? backgroundImage;
 
   return (
     <section className="relative w-full overflow-hidden" aria-label="Featured">
-      {/* Background image — per-slide when defined, spans full hero + quiz */}
-      <AnimatePresence mode="sync">
-        {bgImage && (
-          <motion.div
-            key={bgImage}
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${bgImage})` }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 2, ease: [0.25, 0.46, 0.45, 0.94] } }}
-            transition={{ duration: 2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            aria-hidden
-          />
-        )}
-      </AnimatePresence>
+      {/* Background: stacked layers, opacity-only crossfade — no Framer */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden>
+        {SLIDES.map((s, i) => {
+          const src = s.backgroundImage ?? backgroundImage;
+          if (!src) return null;
+          return (
+            <div
+              key={s.id}
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity"
+              style={{
+                backgroundImage: `url(${src})`,
+                opacity: i === active ? 1 : 0,
+                transitionDuration: `${BG_CROSSFADE_MS}ms`,
+                transitionTimingFunction: BG_EASE,
+                zIndex: i === active ? 1 : 0,
+              }}
+            />
+          );
+        })}
+      </div>
+
       <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.65)_0%,rgba(255,255,255,0.35)_50%,transparent_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.65)_0%,rgba(255,255,255,0.35)_50%,transparent_100%)]"
         aria-hidden
       />
 
       <div className="relative z-10 flex flex-col">
         <div className="flex min-h-[min(55vh,480px)] flex-col items-start justify-center px-4 pt-16 pb-2 text-left sm:px-6 sm:pt-20 lg:px-8">
-          <div className="mx-auto w-full max-w-wrapper relative min-h-[22rem] sm:min-h-[24rem]">
-            <AnimatePresence mode="sync">
-              <motion.div
-                key={active}
-                className="absolute left-0 top-0 max-w-2xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0, transition: { duration: 2, ease: [0.25, 0.46, 0.45, 0.94] } }}
-                transition={{ duration: 2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                variants={{
-                  visible: {
-                    transition: {
-                      staggerChildren: 0.072,
-                      delayChildren: 0.04,
-                    },
-                  },
-                }}
-              >
-                <motion.div
-                  className="mb-6 [&_svg]:h-20 [&_svg]:w-auto sm:[&_svg]:h-24"
-                  initial={false}
-                  variants={{
-                    hidden: { opacity: 0, y: 24 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
-                    },
-                  }}
+          <div className="relative mx-auto min-h-[22rem] w-full max-w-wrapper sm:min-h-[24rem]">
+            <div className="absolute left-0 top-0 w-full max-w-2xl">
+              <div className="mb-6 [&_svg]:h-20 [&_svg]:w-auto sm:[&_svg]:h-24">
+                <Logo />
+              </div>
+
+              <div className="relative h-[23rem] w-full overflow-hidden sm:h-[25rem] md:h-[26rem]">
+                <article
+                  key={active}
+                  className="hero-slide-copy-in absolute inset-0 flex max-w-2xl flex-col justify-start"
+                  aria-live="polite"
                 >
-                  <Logo />
-                </motion.div>
-                <motion.h1
-                  className="min-h-[2.2em] text-4xl font-bold tracking-tight text-neutral-900 sm:text-5xl md:text-6xl"
-                  initial={false}
-                  variants={{
-                    hidden: { opacity: 0, y: 24 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
-                    },
-                  }}
-                >
-                  {slide.title[0]}
-                  <br />
-                  {slide.title[1]}
-                </motion.h1>
-                <motion.p
-                  className="mt-2 min-h-[3em] max-w-lg text-base text-neutral-800 sm:text-lg md:text-xl"
-                  initial={false}
-                  variants={{
-                    hidden: { opacity: 0, y: 18 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
-                    },
-                  }}
-                >
-                  {slide.subtitle}
-                </motion.p>
-              </motion.div>
-            </AnimatePresence>
+                  <div className="min-h-[7.5rem] sm:min-h-[8.5rem] md:min-h-[9.5rem]">
+                    <h1 className="text-4xl font-bold leading-tight tracking-tight text-neutral-900 sm:text-5xl md:text-6xl">
+                      {slide.title[0]}
+                      <br />
+                      {slide.title[1]}
+                    </h1>
+                  </div>
+                  <p className="mt-2 max-w-lg text-base leading-snug text-neutral-800 sm:text-lg md:text-xl">
+                    {slide.subtitle}
+                  </p>
+                </article>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Quiz — part of hero section */}
         <div
           id="find-my-fit-quiz"
           className="scroll-mt-24 w-full px-4 pb-16 pt-0 sm:px-6 sm:pb-8 lg:px-8"
@@ -176,7 +143,6 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
           </div>
         </div>
 
-        {/* Progress bars */}
         <div className="w-full px-4 pb-4 pt-2 sm:px-6 sm:pb-6 lg:px-8">
           <div className="mx-auto w-full max-w-wrapper">
             <div className="rounded-2xl border border-white/20 bg-white/70 px-5 py-3 backdrop-blur-xl backdrop-saturate-150 sm:px-6 sm:py-4">
