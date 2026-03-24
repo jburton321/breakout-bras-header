@@ -66,6 +66,58 @@ body {
   fill: #6e6e6e;
 }
 
+/* Quiz confirmation — decorative butterflies (reuse wing flap; stagger + float) */
+.confirmation-butterflies-layer .logo-animated-bird .wing-l,
+.confirmation-butterflies-layer .logo-animated-bird .wing-r {
+  animation-delay: var(--bf-delay, 0s);
+}
+
+@keyframes confirmation-butterfly-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-3deg);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0) rotate(4deg);
+  }
+}
+
+.confirmation-butterfly-float {
+  animation: confirmation-butterfly-float 5.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.confirmation-butterfly-float-a {
+  animation-duration: 5s;
+}
+
+.confirmation-butterfly-float-b {
+  animation-duration: 6.5s;
+  animation-delay: 0.3s;
+}
+
+.confirmation-butterfly-float-c {
+  animation-duration: 5.8s;
+  animation-delay: 0.8s;
+}
+
+.confirmation-butterfly-float-d {
+  animation-duration: 6s;
+  animation-delay: 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirmation-butterfly-float {
+    animation: none;
+  }
+
+  .confirmation-butterflies-layer .logo-animated-bird .wing-l,
+  .confirmation-butterflies-layer .logo-animated-bird .wing-r {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+}
+
 /* Hero headline: fade-in on slide change only (no exit layer — avoids overlap bugs) */
 @keyframes hero-slide-copy-in {
   from {

@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
+import { ConfirmationButterflies } from "./ConfirmationButterflies";
+import { FittingTypeIcon, QuizOptionIcon } from "./QuizOptionIcons";
 
-const TOTAL_STEPS = 11;
+const TOTAL_STEPS = 12;
 
 /** Store visit address when customer chooses in-person fitting (step 1). */
 const IN_PERSON_FITTING_ADDRESS = "525 Haywood Rd, Greenville, SC 29607";
@@ -252,10 +254,12 @@ export function BraFitQuiz() {
       case 8:
         return braAge !== "";
       case 9:
-        return underwearStyles.length > 0 && underwearSize !== "";
+        return underwearStyles.length > 0;
       case 10:
-        return braSituation !== "";
+        return underwearSize !== "";
       case 11:
+        return braSituation !== "";
+      case 12:
         return (
           firstName.trim().length > 0 &&
           lastName.trim().length > 0 &&
@@ -366,15 +370,15 @@ export function BraFitQuiz() {
     setMarketingConsent(false);
   }, []);
 
-  const card = (sel: boolean) =>
-    `cursor-pointer rounded-lg border px-4 py-4 text-center text-sm font-medium transition ${
+  const optionCard = (sel: boolean) =>
+    `flex min-h-[3.5rem] flex-row items-center gap-3 rounded-lg border px-3 py-2.5 text-left text-xs font-medium transition sm:min-h-[3.75rem] sm:text-sm ${
       sel
         ? "border-[#719B9A] bg-[#719B9A] text-white"
         : "border-[#ddd] bg-white hover:border-[#719B9A] hover:bg-[#f0f6f6]"
     }`;
 
   const fittingCard = (sel: boolean) =>
-    `flex w-full cursor-pointer flex-col items-start rounded-lg border px-4 py-4 text-left text-sm font-medium transition ${
+    `flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border px-4 py-4 text-left text-sm font-medium transition ${
       sel
         ? "border-[#719B9A] bg-[#719B9A] text-white"
         : "border-[#ddd] bg-white hover:border-[#719B9A] hover:bg-[#f0f6f6]"
@@ -406,7 +410,9 @@ export function BraFitQuiz() {
       )}
 
       {showConfirmation ? (
-        <div className="space-y-4">
+        <div className="relative space-y-4">
+          <ConfirmationButterflies />
+          <div className="relative z-[1] space-y-4">
           <div className="relative overflow-hidden rounded-xl border border-[#719B9A]/20 bg-gradient-to-br from-[#e8f2f1] via-white to-[#f3ebe6] px-4 py-4 shadow-[0_1px_0_rgba(255,255,255,0.8)_inset] sm:flex sm:items-center sm:gap-4 sm:py-3 sm:pl-4 sm:pr-5">
             <div
               className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#719B9A]/10 blur-xl"
@@ -588,7 +594,7 @@ export function BraFitQuiz() {
                 type="button"
                 onClick={() => {
                   setShowConfirmation(false);
-                  setStep(11);
+                  setStep(12);
                 }}
                 className="rounded-full border-2 border-[#719B9A] bg-white px-6 py-2.5 text-sm font-semibold text-[#719B9A] shadow-sm transition hover:bg-[#f0f6f6]"
               >
@@ -602,6 +608,7 @@ export function BraFitQuiz() {
                 Start over
               </button>
             </div>
+          </div>
           </div>
         </div>
       ) : (
@@ -619,28 +626,34 @@ export function BraFitQuiz() {
                 onClick={() => setFittingType("virtual")}
                 className={fittingCard(fittingType === "virtual")}
               >
-                <span className="font-semibold">Virtual fitting</span>
-                <span
-                  className={`mt-1 block text-xs leading-snug ${
-                    fittingType === "virtual" ? "text-white/90" : "text-[#666]"
-                  }`}
-                >
-                  One-on-one with a fitter online from home.
-                </span>
+                <FittingTypeIcon type="virtual" selected={fittingType === "virtual"} />
+                <div className="min-w-0 flex-1">
+                  <span className="font-semibold">Virtual fitting</span>
+                  <span
+                    className={`mt-1 block text-xs leading-snug ${
+                      fittingType === "virtual" ? "text-white/90" : "text-[#666]"
+                    }`}
+                  >
+                    One-on-one with a fitter online from home.
+                  </span>
+                </div>
               </button>
               <button
                 type="button"
                 onClick={() => setFittingType("in-person")}
                 className={fittingCard(fittingType === "in-person")}
               >
-                <span className="font-semibold">In person</span>
-                <span
-                  className={`mt-1 block text-xs leading-snug ${
-                    fittingType === "in-person" ? "text-white/90" : "text-[#666]"
-                  }`}
-                >
-                  {IN_PERSON_FITTING_ADDRESS}
-                </span>
+                <FittingTypeIcon type="in-person" selected={fittingType === "in-person"} />
+                <div className="min-w-0 flex-1">
+                  <span className="font-semibold">In person</span>
+                  <span
+                    className={`mt-1 block text-xs leading-snug ${
+                      fittingType === "in-person" ? "text-white/90" : "text-[#666]"
+                    }`}
+                  >
+                    {IN_PERSON_FITTING_ADDRESS}
+                  </span>
+                </div>
               </button>
             </div>
           </div>
@@ -700,9 +713,10 @@ export function BraFitQuiz() {
                   key={o}
                   type="button"
                   onClick={() => toggle(brablems, setBrablems, o, 2)}
-                  className={card(brablems.includes(o))}
+                  className={optionCard(brablems.includes(o))}
                 >
-                  {o}
+                  <QuizOptionIcon group="brablem" label={o} selected={brablems.includes(o)} />
+                  <span className="min-w-0 flex-1 leading-snug">{o}</span>
                 </button>
               ))}
             </div>
@@ -719,9 +733,10 @@ export function BraFitQuiz() {
                   key={o}
                   type="button"
                   onClick={() => toggle(styles, setStyles, o, 2)}
-                  className={card(styles.includes(o))}
+                  className={optionCard(styles.includes(o))}
                 >
-                  {o}
+                  <QuizOptionIcon group="style" label={o} selected={styles.includes(o)} />
+                  <span className="min-w-0 flex-1 leading-snug">{o}</span>
                 </button>
               ))}
             </div>
@@ -740,9 +755,10 @@ export function BraFitQuiz() {
                   key={o}
                   type="button"
                   onClick={() => toggle(preferences, setPreferences, o, 2)}
-                  className={card(preferences.includes(o))}
+                  className={optionCard(preferences.includes(o))}
                 >
-                  {o}
+                  <QuizOptionIcon group="preference" label={o} selected={preferences.includes(o)} />
+                  <span className="min-w-0 flex-1 leading-snug">{o}</span>
                 </button>
               ))}
             </div>
@@ -790,9 +806,10 @@ export function BraFitQuiz() {
                   key={o}
                   type="button"
                   onClick={() => setHookUsage(o)}
-                  className={card(hookUsage === o)}
+                  className={optionCard(hookUsage === o)}
                 >
-                  {o}
+                  <QuizOptionIcon group="hook" label={o} selected={hookUsage === o} />
+                  <span className="min-w-0 flex-1 leading-snug">{o}</span>
                 </button>
               ))}
             </div>
@@ -808,9 +825,10 @@ export function BraFitQuiz() {
                   key={o}
                   type="button"
                   onClick={() => setBraAge(o)}
-                  className={card(braAge === o)}
+                  className={optionCard(braAge === o)}
                 >
-                  {o}
+                  <QuizOptionIcon group="braAge" label={o} selected={braAge === o} />
+                  <span className="min-w-0 flex-1 leading-snug">{o}</span>
                 </button>
               ))}
             </div>
@@ -827,22 +845,10 @@ export function BraFitQuiz() {
                   key={o}
                   type="button"
                   onClick={() => toggle(underwearStyles, setUnderwearStyles, o, 2)}
-                  className={card(underwearStyles.includes(o))}
+                  className={optionCard(underwearStyles.includes(o))}
                 >
-                  {o}
-                </button>
-              ))}
-            </div>
-            <h3 className="mb-4 text-lg font-medium">Underwear size?</h3>
-            <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {UNDERWEAR_SIZES.map((o) => (
-                <button
-                  key={o}
-                  type="button"
-                  onClick={() => setUnderwearSize(o)}
-                  className={card(underwearSize === o)}
-                >
-                  {o}
+                  <QuizOptionIcon group="underwearStyle" label={o} selected={underwearStyles.includes(o)} />
+                  <span className="min-w-0 flex-1 leading-snug">{o}</span>
                 </button>
               ))}
             </div>
@@ -851,16 +857,18 @@ export function BraFitQuiz() {
 
         {step === 10 && (
           <div>
-            <h2 className="mb-2 text-2xl font-semibold">What&apos;s your current bra situation?</h2>
-            <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {BRA_SITUATIONS.map((o) => (
+            <h2 className="mb-2 text-2xl font-semibold">Underwear size?</h2>
+            <p className="mb-6 text-sm text-[#666]">Pick the size that matches you best.</p>
+            <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {UNDERWEAR_SIZES.map((o) => (
                 <button
                   key={o}
                   type="button"
-                  onClick={() => setBraSituation(o)}
-                  className={card(braSituation === o)}
+                  onClick={() => setUnderwearSize(o)}
+                  className={optionCard(underwearSize === o)}
                 >
-                  {o}
+                  <QuizOptionIcon group="underwearSize" label={o} selected={underwearSize === o} />
+                  <span className="min-w-0 flex-1 leading-snug">{o}</span>
                 </button>
               ))}
             </div>
@@ -868,6 +876,25 @@ export function BraFitQuiz() {
         )}
 
         {step === 11 && (
+          <div>
+            <h2 className="mb-2 text-2xl font-semibold">What&apos;s your current bra situation?</h2>
+            <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {BRA_SITUATIONS.map((o) => (
+                <button
+                  key={o}
+                  type="button"
+                  onClick={() => setBraSituation(o)}
+                  className={optionCard(braSituation === o)}
+                >
+                  <QuizOptionIcon group="situation" label={o} selected={braSituation === o} />
+                  <span className="min-w-0 flex-1 text-balance leading-snug">{o}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step === 12 && (
           <div>
             <h2 className="mb-3 text-2xl font-semibold">Your new fit is ready!</h2>
             <div className="mb-6 rounded-xl border border-[#719B9A]/25 bg-gradient-to-br from-[#f4faf9] to-white px-4 py-3.5 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset] sm:px-5">
