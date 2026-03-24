@@ -108,7 +108,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
       />
 
       <div className="relative z-10 flex flex-col">
-        <div className="flex min-h-[min(55vh,480px)] flex-col items-start justify-center px-4 pt-16 pb-2 text-left sm:px-6 sm:pt-20 lg:px-8">
+        <div className="flex min-h-[min(55vh,480px)] flex-col items-start justify-center px-page pt-16 pb-2 text-left sm:pt-20">
           <div className="relative mx-auto min-h-[22rem] w-full max-w-wrapper sm:min-h-[24rem]">
             <div className="absolute left-0 top-0 w-full max-w-2xl">
               <div className="mb-6 [&_svg]:h-20 [&_svg]:w-auto sm:[&_svg]:h-24">
@@ -139,14 +139,14 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
 
         <div
           id="find-my-fit-quiz"
-          className="scroll-mt-24 w-full px-4 pb-16 pt-0 sm:px-6 sm:pb-8 lg:px-8"
+          className="scroll-mt-24 w-full px-page pb-16 pt-0 sm:pb-8"
         >
           <div className="mx-auto w-full max-w-wrapper">
             <BraFitQuiz />
           </div>
         </div>
 
-        <div className="w-full px-4 pb-4 pt-2 sm:px-6 sm:pb-6 lg:px-8">
+        <div className="w-full px-page pb-4 pt-2 sm:pb-6">
           <div className="mx-auto w-full max-w-wrapper">
             <div className="rounded-2xl border border-white/20 bg-white/70 px-5 py-3 backdrop-blur-xl backdrop-saturate-150 sm:px-6 sm:py-4">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4">

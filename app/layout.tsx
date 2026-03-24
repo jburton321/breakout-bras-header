@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Breakout Bras" }],
   robots: "index, follow",
   icons: {
-    icon: "https://www.breakoutbras.com/cdn/shop/files/Favicon_8ac6e8fd-29cb-4fca-ab17-ea2bbde7b570_180x180.png?v=1685643316",
+    icon: "/logo/logo-grey.svg",
   },
 };
 

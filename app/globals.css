@@ -5,8 +5,20 @@
 :root {
   --content-width: 1600px;
   --content-wrapper: 1520px;
+  /* Match tailwind.config.ts theme.extend.screens */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
   --background: #ffffff;
   --foreground: #4D5152;
+}
+
+@layer components {
+  .px-page {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
 }
 
 body {
@@ -59,7 +71,7 @@ body {
 }
 
 .logo-animated-bird .cls-2 {
-  fill: #6b9ea0;
+  fill: #719b9a;
 }
 
 .logo-animated-bird .cls-3 {

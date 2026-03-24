@@ -1,5 +1,10 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * Breakpoints are pinned here (Tailwind defaults) so the project does not drift
+ * silently when upgrading Tailwind. Use `px-page` in globals.css for shared gutters.
+ * @see lib/breakpoints.ts for the same values in TS (matchMedia, etc.)
+ */
 export default {
   content: [
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -7,9 +12,16 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+      },
       maxWidth: {
         content: "var(--content-width, 1600px)",
-        wrapper: "var(--content-wrapper, 1320px)",
+        wrapper: "var(--content-wrapper, 1520px)",
       },
       colors: {
         breakout: {

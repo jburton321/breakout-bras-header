@@ -32,7 +32,7 @@ export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
         style={{ height: topBarVisible ? 40 : 0 }}
       >
         <div
-          className="flex w-full items-center justify-center px-4 py-2 text-sm font-medium text-white sm:px-6 lg:px-8"
+          className="flex w-full items-center justify-center px-page py-2 text-sm font-medium text-white"
           style={{ backgroundColor: TEAL }}
         >
           <span className="opacity-90">Free shipping on all US orders</span>
@@ -42,7 +42,7 @@ export function BreakoutBrasHeader({ overlay = false }: { overlay?: boolean }) {
 
       {/* Main nav bar — fills space when top bar collapses */}
       <div
-        className={`flex w-full items-center justify-between px-4 py-4 transition-colors duration-300 sm:px-6 lg:px-8 ${overlay && topBarVisible ? "bg-transparent" : "bg-white shadow-sm"}`}
+        className={`flex w-full items-center justify-between px-page py-4 transition-colors duration-300 ${overlay && topBarVisible ? "bg-transparent" : "bg-white shadow-sm"}`}
       >
         <Link href="/" className="flex shrink-0">
           <Logo />
