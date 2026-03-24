@@ -14,24 +14,27 @@ const SLIDES: Array<{
 }> = [
   {
     id: "bras",
-    title: ["Bras Fit", "Is Everything"],
-    subtitle: "Discover sizes that celebrate your shape and give superior lift and containment.",
+    title: ["Say Goodbye to", "Bad Bra Days"],
+    subtitle:
+      "Find your perfect fit with this quick 1-minute quiz.",
     label: "Shop Bras",
     href: "/bras",
     backgroundImage: "/images/Slide1.png",
   },
   {
     id: "fitting",
-    title: ["Professional Fitting", "Changes Everything"],
-    subtitle: "Reserve your spot for in-store or virtual fitting with our expert team.",
+    title: ["Get Fit", "by the Pros"],
+    subtitle:
+      "Let our expert team guide you. Book your dedicated in-store or virtual appointment now.",
     label: "Book a Fitting",
     href: "/appointments",
     backgroundImage: "/images/Slide2.png",
   },
   {
     id: "sports",
-    title: ["Strong, Soft", "& Secure"],
-    subtitle: "Sports bras that move with you—unbeatable support, comfort, and real lift.",
+    title: ["Strong, Soft, and", "Completely Secure"],
+    subtitle:
+      "Experience bras that move with you, offering unbeatable support, comfort, and real lift.",
     label: "Sports Bras",
     href: "/bras",
     backgroundImage: "/images/Slide3.png",

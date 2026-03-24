@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 
 const TOTAL_STEPS = 10;
@@ -94,6 +95,7 @@ export function BraFitQuiz() {
   const [braSituation, setBraSituation] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [marketingConsent, setMarketingConsent] = useState(false);
 
   const toggle = useCallback(
     (list: string[], set: (v: string[]) => void, val: string, max: number) => {
@@ -125,7 +127,11 @@ export function BraFitQuiz() {
       case 9:
         return braSituation !== "";
       case 10:
-        return email.includes("@") && email.includes(".");
+        return (
+          email.includes("@") &&
+          email.includes(".") &&
+          marketingConsent
+        );
       default:
         return false;
     }
@@ -142,6 +148,7 @@ export function BraFitQuiz() {
     underwearSize,
     braSituation,
     email,
+    marketingConsent,
   ]);
 
   const progress = showConfirmation ? 100 : ((step - 1) / (TOTAL_STEPS - 1)) * 100;
@@ -164,6 +171,7 @@ export function BraFitQuiz() {
       braSituation,
       email,
       phone,
+      marketingConsent,
     }),
     [
       bandSize,
@@ -180,6 +188,7 @@ export function BraFitQuiz() {
       braSituation,
       email,
       phone,
+      marketingConsent,
     ]
   );
 
@@ -200,6 +209,7 @@ export function BraFitQuiz() {
     setBraSituation("");
     setEmail("");
     setPhone("");
+    setMarketingConsent(false);
   }, []);
 
   const card = (sel: boolean) =>
@@ -292,6 +302,12 @@ export function BraFitQuiz() {
             <div className="grid gap-1 sm:grid-cols-[minmax(0,11rem)_1fr] sm:gap-x-4">
               <dt className="font-semibold text-[#666]">Phone</dt>
               <dd className="text-[#3b3a36]">{quizPayload.phone || "—"}</dd>
+            </div>
+            <div className="grid gap-1 sm:grid-cols-[minmax(0,11rem)_1fr] sm:gap-x-4">
+              <dt className="font-semibold text-[#666]">Marketing</dt>
+              <dd className="text-[#3b3a36]">
+                {quizPayload.marketingConsent ? "Opted in" : "—"}
+              </dd>
             </div>
           </dl>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -557,8 +573,41 @@ export function BraFitQuiz() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Phone (optional)"
-              className="w-full rounded-lg border border-[#ddd] px-4 py-3.5 outline-none focus:border-[#719B9A]"
+              className="mb-4 w-full rounded-lg border border-[#ddd] px-4 py-3.5 outline-none focus:border-[#719B9A]"
             />
+            <div className="flex gap-3 rounded-lg border border-[#e8e8e4] bg-[#fafaf8] p-4">
+              <input
+                id="marketing-consent"
+                type="checkbox"
+                checked={marketingConsent}
+                onChange={(e) => setMarketingConsent(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-[#ccc] accent-[#719B9A]"
+              />
+              <label
+                htmlFor="marketing-consent"
+                className="cursor-pointer text-xs leading-relaxed text-[#555] sm:text-sm"
+              >
+                By checking this box, you agree to receive personalized fitting recommendations,
+                exclusive offers, new arrivals, and helpful bra tips from Breakout Bras via email,
+                SMS/text, and phone. Message and data rates may apply. SMS frequency may vary. You
+                can opt out at any time by replying STOP to any text, clicking unsubscribe in any
+                email. View our{" "}
+                <Link
+                  href="/privacy"
+                  className="font-medium text-[#719B9A] underline underline-offset-2 hover:text-[#5a8584]"
+                >
+                  Privacy Policy
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/terms"
+                  className="font-medium text-[#719B9A] underline underline-offset-2 hover:text-[#5a8584]"
+                >
+                  Terms and Conditions
+                </Link>
+                .
+              </label>
+            </div>
           </div>
         )}
       </form>
