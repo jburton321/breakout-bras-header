@@ -19,6 +19,48 @@
   .px-page {
     @apply px-4 sm:px-6 lg:px-8;
   }
+
+  /* Bootstrap 5–style form controls (no bootstrap package; matches spacing & borders) */
+  .form-label {
+    @apply mb-1 block text-sm font-medium text-[#212529];
+  }
+
+  .form-control {
+    @apply block w-full min-h-[calc(1.5em+0.75rem+2px)] rounded-[0.375rem] border border-[#ced4da] bg-white px-3 py-2 text-base leading-normal text-[#212529] shadow-[inset_0_1px_2px_rgba(0,0,0,0.075)] transition-[border-color,box-shadow] placeholder:text-[#6c757d] focus:border-[#86b7fe] focus:outline-none focus:ring-2 focus:ring-[rgba(13,110,253,0.25)] disabled:cursor-not-allowed disabled:bg-[#e9ecef] disabled:opacity-100;
+  }
+
+  /* Underline-only fields (no boxed border) */
+  .form-control-line {
+    @apply min-h-0 rounded-none border-0 border-b-2 border-[#c5cbc8] bg-transparent px-0 py-2.5 shadow-none transition-[border-color] placeholder:text-[#9ca3a0] focus:border-[#719B9A] focus:outline-none focus:ring-0 disabled:border-[#e5e7e6] disabled:bg-transparent;
+  }
+
+  .form-select {
+    @apply form-control appearance-none bg-[length:16px_12px] bg-[position:right_0.75rem_center] bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  }
+
+  /* Select + underline (do not combine .form-select + .form-control-line — .form-select re-applies boxed .form-control) */
+  .form-select-line {
+    @apply form-control-line appearance-none bg-[length:16px_12px] bg-[position:right_0_center] bg-no-repeat pr-8;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  }
+
+  .form-check {
+    @apply flex gap-2;
+  }
+
+  .form-check-input {
+    @apply mt-1 h-4 w-4 shrink-0 cursor-pointer rounded-sm border border-[#ced4da] bg-white text-[#0d6efd] shadow-sm focus:ring-2 focus:ring-[rgba(13,110,253,0.25)];
+    accent-color: #719b9a;
+  }
+
+  .form-check-label {
+    @apply cursor-pointer text-sm leading-snug text-[#212529];
+  }
+
+  .form-text {
+    @apply mt-1 text-xs text-[#6c757d];
+  }
 }
 
 body {
@@ -128,6 +170,32 @@ body {
     animation-duration: 0.01ms;
     animation-iteration-count: 1;
   }
+
+  .confirmation-burst-layer {
+    display: none;
+  }
+}
+
+/* Confirmation: one-shot moth burst (confetti-style), then fade */
+@keyframes confirmation-butterfly-burst {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(var(--burst-scale, 0.32));
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(var(--burst-tx, 0px), var(--burst-ty, 0px))
+      rotate(var(--burst-rot, 0deg)) scale(var(--burst-scale, 0.32));
+    opacity: 0;
+  }
+}
+
+.confirmation-burst-particle {
+  position: absolute;
+  left: 50%;
+  top: 32%;
+  will-change: transform, opacity;
+  animation: confirmation-butterfly-burst 1.35s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation-delay: var(--burst-delay, 0s);
 }
 
 /* Hero headline: fade-in on slide change only (no exit layer — avoids overlap bugs) */
@@ -141,11 +209,110 @@ body {
 }
 
 .hero-slide-copy-in {
-  animation: hero-slide-copy-in 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: hero-slide-copy-in var(--hero-slide-copy-duration, 2000ms)
+    var(--hero-slide-copy-ease, cubic-bezier(0.25, 0.46, 0.45, 0.94)) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-slide-copy-in {
     animation-duration: 0.01ms;
+  }
+}
+
+/* Quiz progress bar — animated moth (inspired by codepen.io/htgmanics/pen/nJwdl; SVG from freepik) */
+@keyframes quiz-moth-left-wing-flap {
+  0% {
+    transform: translate3d(0, 0, 0) scaleX(1) rotate3d(0, 1, 0, 60deg);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) scaleX(1) rotate3d(0, 1, 0, -70deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scaleX(1) rotate3d(0, 1, 0, 60deg);
+  }
+}
+
+@keyframes quiz-moth-right-wing-flap {
+  0% {
+    transform: translate3d(0, 0, 0) scaleX(-1) rotate3d(0, 1, 0, 60deg);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) scaleX(-1) rotate3d(0, 1, 0, -70deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scaleX(-1) rotate3d(0, 1, 0, 60deg);
+  }
+}
+
+.quiz-moth-holder {
+  position: relative;
+  display: flex;
+  width: 44px;
+  height: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  transform-style: preserve-3d;
+}
+
+.quiz-moth-box {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  transform: scale(0.38);
+  transform-origin: center center;
+  transform-style: preserve-3d;
+}
+
+.quiz-moth-rotate3d {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  transform: rotate3d(1, 0.5, 0, 50deg);
+  transform-style: preserve-3d;
+}
+
+.quiz-moth-figure {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: 0;
+  width: 100px;
+  height: 100px;
+  margin-left: -50px;
+  margin-top: -50px;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+}
+
+.quiz-moth-wing {
+  position: absolute;
+  width: 50px;
+  height: 100px;
+  transform-style: preserve-3d;
+  transform-origin: 50px 50px;
+  transform: translate3d(0, 0, 0) rotate3d(1, 0.5, 0, 45deg);
+}
+
+.quiz-moth-wing--left {
+  animation: quiz-moth-left-wing-flap 1s ease-in-out infinite;
+}
+
+.quiz-moth-wing--right {
+  transform: translate3d(0, 0, 0) scaleX(-1) rotate3d(0, 1, 0, 45deg);
+  animation: quiz-moth-right-wing-flap 1s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quiz-moth-wing--left,
+  .quiz-moth-wing--right {
+    animation: none;
   }
 }

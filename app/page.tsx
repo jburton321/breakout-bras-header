@@ -1,4 +1,5 @@
 import { Footer } from "@/components/breakout-bras/Footer";
+import { HomeImageGallery } from "@/components/breakout-bras/HomeImageGallery";
 import { MaternityHero } from "@/components/hero/MaternityHero";
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
       <div className="relative">
         <MaternityHero />
       </div>
+      <HomeImageGallery />
       <Footer />
     </div>
   );

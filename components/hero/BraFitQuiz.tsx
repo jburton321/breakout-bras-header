@@ -1,13 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  BsFormCheck,
+  BsFormControl,
+  BsFormGroup,
+  BsFormLabel,
+  BsFormSelect,
+} from "@/components/ui/BootstrapFormFields";
+import { ConfirmationButterflyBurst } from "./ConfirmationButterflyBurst";
 import { ConfirmationButterflies } from "./ConfirmationButterflies";
+import { QuizProgressButterfly } from "./QuizProgressButterfly";
 import { FittingTypeIcon, QuizOptionIcon } from "./QuizOptionIcons";
 
 const TOTAL_STEPS = 12;
 
-/** Store visit address when customer chooses in-person fitting (step 1). */
+/** Store visit address when customer chooses in-person fitting (step 2). */
 const IN_PERSON_FITTING_ADDRESS = "525 Haywood Rd, Greenville, SC 29607";
 
 const BRA_SITUATIONS = [
@@ -238,28 +247,6 @@ export function BraFitQuiz() {
   const canNext = useMemo(() => {
     switch (step) {
       case 1:
-        return fittingType !== "";
-      case 2:
-        return Boolean(bandSize && cupSize);
-      case 3:
-        return brablems.length > 0;
-      case 4:
-        return styles.length > 0;
-      case 5:
-        return preferences.length > 0;
-      case 6:
-        return true;
-      case 7:
-        return hookUsage !== "";
-      case 8:
-        return braAge !== "";
-      case 9:
-        return underwearStyles.length > 0;
-      case 10:
-        return underwearSize !== "";
-      case 11:
-        return braSituation !== "";
-      case 12:
         return (
           firstName.trim().length > 0 &&
           lastName.trim().length > 0 &&
@@ -268,6 +255,28 @@ export function BraFitQuiz() {
           email.includes(".") &&
           marketingConsent
         );
+      case 2:
+        return fittingType !== "";
+      case 3:
+        return Boolean(bandSize && cupSize);
+      case 4:
+        return brablems.length > 0;
+      case 5:
+        return styles.length > 0;
+      case 6:
+        return preferences.length > 0;
+      case 7:
+        return true;
+      case 8:
+        return hookUsage !== "";
+      case 9:
+        return braAge !== "";
+      case 10:
+        return underwearStyles.length > 0;
+      case 11:
+        return underwearSize !== "";
+      case 12:
+        return braSituation !== "";
       default:
         return false;
     }
@@ -292,6 +301,50 @@ export function BraFitQuiz() {
   ]);
 
   const progress = showConfirmation ? 100 : ((step - 1) / (TOTAL_STEPS - 1)) * 100;
+
+  /** Butterfly trails the fill with eased catch-up (glide); bar stays snappy. */
+  const butterflyGlideRef = useRef(progress);
+  const [butterflyGlide, setButterflyGlide] = useState(progress);
+
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      butterflyGlideRef.current = progress;
+      setButterflyGlide(progress);
+      return;
+    }
+
+    let raf = 0;
+    let cancelled = false;
+
+    const tick = () => {
+      if (cancelled) return;
+      const target = progress;
+      const prev = butterflyGlideRef.current;
+      const diff = target - prev;
+
+      if (Math.abs(diff) < 0.04) {
+        butterflyGlideRef.current = target;
+        setButterflyGlide(target);
+        return;
+      }
+
+      // Ease-out style catch-up: faster when far behind, soft landing when close (organic glide).
+      const eased = 0.05 + Math.min(0.24, Math.abs(diff) * 0.0018);
+      const next = prev + diff * eased;
+      butterflyGlideRef.current = next;
+      setButterflyGlide(next);
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+    };
+  }, [progress]);
 
   const quizPayload = useMemo(
     () => ({
@@ -391,11 +444,19 @@ export function BraFitQuiz() {
       }`}
     >
       {!showConfirmation && (
-        <div className="mb-6 h-1 w-full overflow-hidden rounded-full bg-[#eee]">
+        <div className="relative mb-6 w-full pt-7 pb-1">
+          <div className="absolute left-0 right-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-[#eee]" />
           <div
-            className="h-full bg-[#719B9A] transition-[width] duration-300"
+            className="absolute left-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-[#719B9A] transition-[width] duration-[280ms] ease-out"
             style={{ width: `${progress}%` }}
           />
+          <div
+            className="quiz-progress-butterfly-anchor pointer-events-none absolute top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
+            style={{ left: `${butterflyGlide}%` }}
+            aria-hidden
+          >
+            <QuizProgressButterfly />
+          </div>
         </div>
       )}
 
@@ -411,8 +472,9 @@ export function BraFitQuiz() {
 
       {showConfirmation ? (
         <div className="relative space-y-4">
+          <ConfirmationButterflyBurst />
           <ConfirmationButterflies />
-          <div className="relative z-[1] space-y-4">
+          <div className="relative z-10 space-y-4">
           <div className="relative overflow-hidden rounded-xl border border-[#719B9A]/20 bg-gradient-to-br from-[#e8f2f1] via-white to-[#f3ebe6] px-4 py-4 shadow-[0_1px_0_rgba(255,255,255,0.8)_inset] sm:flex sm:items-center sm:gap-4 sm:py-3 sm:pl-4 sm:pr-5">
             <div
               className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#719B9A]/10 blur-xl"
@@ -594,7 +656,7 @@ export function BraFitQuiz() {
                 type="button"
                 onClick={() => {
                   setShowConfirmation(false);
-                  setStep(12);
+                  setStep(1);
                 }}
                 className="rounded-full border-2 border-[#719B9A] bg-white px-6 py-2.5 text-sm font-semibold text-[#719B9A] shadow-sm transition hover:bg-[#f0f6f6]"
               >
@@ -615,6 +677,133 @@ export function BraFitQuiz() {
         <>
       <form onSubmit={(e) => e.preventDefault()}>
         {step === 1 && (
+          <div>
+            <h2 className="mb-4 text-balance text-3xl font-bold leading-tight tracking-tight text-[#2d2c28] sm:mb-5 sm:text-4xl md:text-5xl">
+              The Bra-blem Solver - Find Your Feel-Good Size
+            </h2>
+            <p className="mb-8 text-lg font-bold leading-snug text-[#2d2c28] sm:mb-10 sm:text-xl sm:leading-relaxed md:text-2xl">
+              Tell us where to send your{" "}
+              <span className="relative inline-block rounded-md bg-[#719B9A] px-2.5 py-1 text-lg font-extrabold tracking-tight text-white shadow-sm sm:px-3 sm:text-xl md:text-2xl">
+                15% OFF
+              </span>{" "}
+              code—then we&apos;ll ask a few quick questions to dial in your fit.
+            </p>
+
+            <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
+              <BsFormGroup>
+                <BsFormLabel htmlFor="quiz-first-name" className="sr-only">
+                  First name
+                </BsFormLabel>
+                <BsFormControl
+                  id="quiz-first-name"
+                  className="form-control-line"
+                  type="text"
+                  name="firstName"
+                  autoComplete="given-name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="First name"
+                />
+              </BsFormGroup>
+              <BsFormGroup>
+                <BsFormLabel htmlFor="quiz-last-name" className="sr-only">
+                  Last name
+                </BsFormLabel>
+                <BsFormControl
+                  id="quiz-last-name"
+                  className="form-control-line"
+                  type="text"
+                  name="lastName"
+                  autoComplete="family-name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Last name"
+                />
+              </BsFormGroup>
+              <BsFormGroup>
+                <BsFormLabel htmlFor="quiz-zip" className="sr-only">
+                  ZIP code
+                </BsFormLabel>
+                <BsFormControl
+                  id="quiz-zip"
+                  className="form-control-line"
+                  type="text"
+                  name="zip"
+                  inputMode="numeric"
+                  autoComplete="postal-code"
+                  value={zip}
+                  onChange={(e) => setZip(e.target.value)}
+                  placeholder="ZIP code"
+                />
+              </BsFormGroup>
+              <BsFormGroup>
+                <BsFormLabel htmlFor="quiz-email" className="sr-only">
+                  Email
+                </BsFormLabel>
+                <BsFormControl
+                  id="quiz-email"
+                  className="form-control-line"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                  required
+                />
+              </BsFormGroup>
+              <BsFormGroup className="sm:col-span-2">
+                <BsFormLabel htmlFor="quiz-phone" className="sr-only">
+                  Phone (optional)
+                </BsFormLabel>
+                <BsFormControl
+                  id="quiz-phone"
+                  className="form-control-line"
+                  type="tel"
+                  name="phone"
+                  autoComplete="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Phone (optional)"
+                />
+              </BsFormGroup>
+            </div>
+
+            <div className="mt-6 rounded-xl border border-[#e8e8e4] bg-[#fafaf8] p-5 sm:p-6">
+              <BsFormCheck
+                id="marketing-consent"
+                checked={marketingConsent}
+                onChange={setMarketingConsent}
+                labelClassName="text-left text-xs leading-relaxed text-[#555] sm:text-[13px] sm:leading-relaxed"
+                label={
+                  <>
+                    By checking this box, you agree to receive personalized fitting recommendations,
+                    exclusive offers, new arrivals, and helpful bra tips from Breakout Bras via email,
+                    SMS/text, and phone. Message and data rates may apply. SMS frequency may vary. You
+                    can opt out at any time by replying STOP to any text, clicking unsubscribe in any
+                    email. View our{" "}
+                    <Link
+                      href="/privacy"
+                      className="font-medium text-[#719B9A] underline underline-offset-2 hover:text-[#5a8584]"
+                    >
+                      Privacy Policy
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      href="/terms"
+                      className="font-medium text-[#719B9A] underline underline-offset-2 hover:text-[#5a8584]"
+                    >
+                      Terms and Conditions
+                    </Link>
+                    .
+                  </>
+                }
+              />
+            </div>
+          </div>
+        )}
+
+        {step === 2 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">How would you like to get fitted?</h2>
             <p className="mb-6 text-sm text-[#666]">
@@ -659,43 +848,53 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 2 && (
+        {step === 3 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">What is your current bra size?</h2>
             <p className="mb-6 text-sm text-[#666]">
               Even if it doesn&apos;t fit, that&apos;s OK — we are here to fix that!
             </p>
-            <div className="mb-6 flex gap-4">
-              <label className="flex flex-1 flex-col">
-                <span className="mb-2 text-xs font-semibold uppercase text-[#888]">Band</span>
-                <select
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row">
+              <BsFormGroup className="mb-0 flex-1">
+                <BsFormLabel htmlFor="quiz-band" className="sr-only">
+                  Band
+                </BsFormLabel>
+                <BsFormSelect
+                  id="quiz-band"
+                  line
                   value={bandSize}
                   onChange={(e) => setBandSize(e.target.value)}
-                  className="rounded-lg border border-[#ddd] bg-white px-4 py-3.5 outline-none focus:border-[#719B9A]"
                 >
-                  <option value="">Select</option>
+                  <option value="" disabled hidden>
+                    Band
+                  </option>
                   {BAND_SIZES.map((b) => (
                     <option key={b} value={b}>
                       {b}
                     </option>
                   ))}
-                </select>
-              </label>
-              <label className="flex flex-1 flex-col">
-                <span className="mb-2 text-xs font-semibold uppercase text-[#888]">Cup</span>
-                <select
+                </BsFormSelect>
+              </BsFormGroup>
+              <BsFormGroup className="mb-0 flex-1">
+                <BsFormLabel htmlFor="quiz-cup" className="sr-only">
+                  Cup
+                </BsFormLabel>
+                <BsFormSelect
+                  id="quiz-cup"
+                  line
                   value={cupSize}
                   onChange={(e) => setCupSize(e.target.value)}
-                  className="rounded-lg border border-[#ddd] bg-white px-4 py-3.5 outline-none focus:border-[#719B9A]"
                 >
-                  <option value="">-</option>
+                  <option value="" disabled hidden>
+                    Cup
+                  </option>
                   {CUP_SIZES.map((c) => (
                     <option key={c} value={c}>
                       {c}
                     </option>
                   ))}
-                </select>
-              </label>
+                </BsFormSelect>
+              </BsFormGroup>
             </div>
             <a href="#" className="text-sm text-[#a49184] underline">
               I don&apos;t know my bra size
@@ -703,7 +902,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 3 && (
+        {step === 4 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">Got a bra-blem? We have a solution.</h2>
             <p className="mb-6 text-sm text-[#666]">Select up to 2</p>
@@ -723,7 +922,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 4 && (
+        {step === 5 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">Which styles are you looking for?</h2>
             <p className="mb-6 text-sm text-[#666]">Select up to 2</p>
@@ -743,7 +942,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 5 && (
+        {step === 6 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">
               All of our bras are comfy. What else matters?
@@ -765,7 +964,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 6 && (
+        {step === 7 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">How do your cups fit?</h2>
             <div className="mb-8 px-2">
@@ -786,7 +985,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 7 && (
+        {step === 8 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">How does your band fit?</h2>
             <div className="mb-6">
@@ -816,7 +1015,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 8 && (
+        {step === 9 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">How old is your go-to bra?</h2>
             <div className="mb-6 grid grid-cols-2 gap-3">
@@ -835,7 +1034,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 9 && (
+        {step === 10 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">We make underwear too!</h2>
             <p className="mb-4 text-sm text-[#666]">Select up to 2</p>
@@ -855,7 +1054,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 10 && (
+        {step === 11 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">Underwear size?</h2>
             <p className="mb-6 text-sm text-[#666]">Pick the size that matches you best.</p>
@@ -875,7 +1074,7 @@ export function BraFitQuiz() {
           </div>
         )}
 
-        {step === 11 && (
+        {step === 12 && (
           <div>
             <h2 className="mb-2 text-2xl font-semibold">What&apos;s your current bra situation?</h2>
             <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -890,132 +1089,6 @@ export function BraFitQuiz() {
                   <span className="min-w-0 flex-1 text-balance leading-snug">{o}</span>
                 </button>
               ))}
-            </div>
-          </div>
-        )}
-
-        {step === 12 && (
-          <div>
-            <h2 className="mb-3 text-2xl font-semibold">Your new fit is ready!</h2>
-            <div className="mb-6 rounded-xl border border-[#719B9A]/25 bg-gradient-to-br from-[#f4faf9] to-white px-4 py-3.5 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset] sm:px-5">
-              <p className="text-[15px] font-medium leading-snug text-[#3b3a36] sm:text-base sm:leading-relaxed">
-                Tell us where to send your{" "}
-                <span className="relative inline-block rounded-md bg-[#719B9A] px-2 py-0.5 text-base font-bold tracking-tight text-white shadow-sm sm:text-lg">
-                  15% OFF
-                </span>{" "}
-                code plus we&apos;ll get you set up for your custom fit!
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
-              <label className="flex flex-col">
-                <span className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#888]">
-                  First name
-                </span>
-                <input
-                  type="text"
-                  name="firstName"
-                  autoComplete="given-name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="First name"
-                  className="h-12 w-full rounded-lg border border-[#ddd] bg-white px-4 text-sm text-[#3b3a36] outline-none ring-0 transition placeholder:text-neutral-400 focus:border-[#719B9A] focus:ring-2 focus:ring-[#719B9A]/20"
-                />
-              </label>
-              <label className="flex flex-col">
-                <span className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#888]">
-                  Last name
-                </span>
-                <input
-                  type="text"
-                  name="lastName"
-                  autoComplete="family-name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Last name"
-                  className="h-12 w-full rounded-lg border border-[#ddd] bg-white px-4 text-sm text-[#3b3a36] outline-none ring-0 transition placeholder:text-neutral-400 focus:border-[#719B9A] focus:ring-2 focus:ring-[#719B9A]/20"
-                />
-              </label>
-              <label className="flex flex-col">
-                <span className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#888]">
-                  ZIP code
-                </span>
-                <input
-                  type="text"
-                  name="zip"
-                  inputMode="numeric"
-                  autoComplete="postal-code"
-                  value={zip}
-                  onChange={(e) => setZip(e.target.value)}
-                  placeholder="12345"
-                  className="h-12 w-full rounded-lg border border-[#ddd] bg-white px-4 text-sm text-[#3b3a36] outline-none ring-0 transition placeholder:text-neutral-400 focus:border-[#719B9A] focus:ring-2 focus:ring-[#719B9A]/20"
-                />
-              </label>
-              <label className="flex flex-col">
-                <span className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#888]">
-                  Email
-                </span>
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                  className="h-12 w-full rounded-lg border border-[#ddd] bg-white px-4 text-sm text-[#3b3a36] outline-none ring-0 transition placeholder:text-neutral-400 focus:border-[#719B9A] focus:ring-2 focus:ring-[#719B9A]/20"
-                />
-              </label>
-              <label className="flex flex-col sm:col-span-2">
-                <span className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#888]">
-                  Phone <span className="font-normal normal-case tracking-normal text-[#aaa]">(optional)</span>
-                </span>
-                <input
-                  type="tel"
-                  name="phone"
-                  autoComplete="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="(555) 555-5555"
-                  className="h-12 w-full rounded-lg border border-[#ddd] bg-white px-4 text-sm text-[#3b3a36] outline-none ring-0 transition placeholder:text-neutral-400 focus:border-[#719B9A] focus:ring-2 focus:ring-[#719B9A]/20"
-                />
-              </label>
-            </div>
-
-            <div className="mt-6 grid grid-cols-1 gap-4 rounded-xl border border-[#e8e8e4] bg-[#fafaf8] p-5 sm:p-6">
-              <div className="grid grid-cols-[1.125rem_1fr] items-start gap-3 sm:gap-4">
-                <input
-                  id="marketing-consent"
-                  type="checkbox"
-                  checked={marketingConsent}
-                  onChange={(e) => setMarketingConsent(e.target.checked)}
-                  className="mt-0.5 h-[18px] w-[18px] shrink-0 cursor-pointer rounded border-[#ccc] accent-[#719B9A]"
-                />
-                <label
-                  htmlFor="marketing-consent"
-                  className="cursor-pointer text-left text-xs leading-relaxed text-[#555] sm:text-[13px] sm:leading-relaxed"
-                >
-                  By checking this box, you agree to receive personalized fitting recommendations,
-                  exclusive offers, new arrivals, and helpful bra tips from Breakout Bras via email,
-                  SMS/text, and phone. Message and data rates may apply. SMS frequency may vary. You
-                  can opt out at any time by replying STOP to any text, clicking unsubscribe in any
-                  email. View our{" "}
-                  <Link
-                    href="/privacy"
-                    className="font-medium text-[#719B9A] underline underline-offset-2 hover:text-[#5a8584]"
-                  >
-                    Privacy Policy
-                  </Link>{" "}
-                  and{" "}
-                  <Link
-                    href="/terms"
-                    className="font-medium text-[#719B9A] underline underline-offset-2 hover:text-[#5a8584]"
-                  >
-                    Terms and Conditions
-                  </Link>
-                  .
-                </label>
-              </div>
             </div>
           </div>
         )}

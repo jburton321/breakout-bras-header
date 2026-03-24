@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/breakout-bras/Logo";
 import { BraFitQuiz } from "./BraFitQuiz";
+import { SLIDE_BG_CROSSFADE_EASE, SLIDE_BG_CROSSFADE_MS } from "@/lib/heroSlideMotion";
 
 const SLIDES: Array<{
   id: string;
@@ -42,9 +43,6 @@ const SLIDES: Array<{
 ];
 
 const ROTATE_MS = 6500;
-const BG_CROSSFADE_MS = 2000;
-
-const BG_EASE = "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 
 type MaternityHeroProps = {
   backgroundImage?: string;
@@ -80,7 +78,16 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
   const slide = SLIDES[active];
 
   return (
-    <section className="relative w-full overflow-hidden" aria-label="Featured">
+    <section
+      className="relative w-full overflow-hidden"
+      aria-label="Featured"
+      style={
+        {
+          "--hero-slide-copy-duration": `${SLIDE_BG_CROSSFADE_MS}ms`,
+          "--hero-slide-copy-ease": SLIDE_BG_CROSSFADE_EASE,
+        } as React.CSSProperties
+      }
+    >
       {/* Background: stacked layers, opacity-only crossfade — no Framer */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         {SLIDES.map((s, i) => {
@@ -93,8 +100,8 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
               style={{
                 backgroundImage: `url(${src})`,
                 opacity: i === active ? 1 : 0,
-                transitionDuration: `${BG_CROSSFADE_MS}ms`,
-                transitionTimingFunction: BG_EASE,
+                transitionDuration: `${SLIDE_BG_CROSSFADE_MS}ms`,
+                transitionTimingFunction: SLIDE_BG_CROSSFADE_EASE,
                 zIndex: i === active ? 1 : 0,
               }}
             />
