@@ -16,9 +16,8 @@ const SLIDES: Array<{
   title: [string, string];
   subtitle: string;
   href: string;
+  /** Shown at `sm` and up; hidden on narrow viewports. */
   backgroundImage?: string;
-  /** Narrow/mobile art direction — shown below `sm` (640px). */
-  backgroundImageMobile?: string;
 }> = [
   {
     id: "bras",
@@ -27,7 +26,6 @@ const SLIDES: Array<{
       "Find your perfect fit with this quick 1-minute quiz.",
     href: "/bras",
     backgroundImage: "/images/Slide1.png",
-    backgroundImageMobile: "/images/M-Slide1.png",
   },
   {
     id: "fitting",
@@ -36,7 +34,6 @@ const SLIDES: Array<{
       "Let our expert team guide you. Book your dedicated in-store or virtual appointment now.",
     href: "/appointments",
     backgroundImage: "/images/Slide2.png",
-    backgroundImageMobile: "/images/M-Slide2.png",
   },
   {
     id: "sports",
@@ -45,7 +42,6 @@ const SLIDES: Array<{
       "Experience bras that move with you, offering unbeatable support, comfort, and real lift.",
     href: "/bras",
     backgroundImage: "/images/Slide3.png",
-    backgroundImageMobile: "/images/M-Slide3.png",
   },
 ];
 
@@ -78,12 +74,14 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
         } as CSSProperties
       }
     >
-      {/* Background: `next/image` + object-cover preserves aspect ratio (no stretched “fill”) */}
-      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+      {/* Background: slider images desktop/tablet only; mobile uses solid fill (no M-* slides). */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 bg-[#fafaf8] sm:bg-transparent"
+        aria-hidden
+      >
         {SLIDES.map((s, i) => {
           const desktopSrc = s.backgroundImage ?? backgroundImage;
-          const mobileSrc = s.backgroundImageMobile ?? desktopSrc;
-          if (!desktopSrc && !mobileSrc) return null;
+          if (!desktopSrc) return null;
           const isActive = i === active;
           const layerTransition = {
             opacity: isActive ? 1 : 0,
@@ -93,41 +91,21 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
           return (
             <div
               key={s.id}
-              className="absolute inset-0"
+              className="absolute inset-0 hidden sm:block"
               style={{ zIndex: isActive ? 1 : 0 }}
             >
-              {mobileSrc ? (
-                <div className="absolute inset-0 sm:hidden">
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={mobileSrc}
-                      alt=""
-                      fill
-                      sizes="100vw"
-                      className="object-cover object-center transition-opacity"
-                      style={layerTransition}
-                      priority={i === 0}
-                      draggable={false}
-                    />
-                  </div>
-                </div>
-              ) : null}
-              {desktopSrc ? (
-                <div className="absolute inset-0 hidden sm:block">
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={desktopSrc}
-                      alt=""
-                      fill
-                      sizes="100vw"
-                      className="object-cover object-center transition-opacity"
-                      style={layerTransition}
-                      priority={i === 0}
-                      draggable={false}
-                    />
-                  </div>
-                </div>
-              ) : null}
+              <div className="relative h-full w-full">
+                <Image
+                  src={desktopSrc}
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  className="object-cover object-center transition-opacity"
+                  style={layerTransition}
+                  priority={i === 0}
+                  draggable={false}
+                />
+              </div>
             </div>
           );
         })}
