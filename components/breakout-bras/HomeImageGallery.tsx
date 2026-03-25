@@ -8,6 +8,9 @@ import { SLIDE_BG_CROSSFADE_EASE, SLIDE_BG_CROSSFADE_MS } from "@/lib/heroSlideM
 
 const GALLERY_ITEMS = [1, 2, 3, 4, 5, 6, 7] as const;
 
+/** Show this many tiles below `md`; full set from `md` up. */
+const GALLERY_VISIBLE_MOBILE = 6;
+
 function frontSrc(n: number) {
   return `/front-back-gallery/${n}-front`;
 }
@@ -112,7 +115,9 @@ export function HomeImageGallery() {
               key={n}
               type="button"
               onClick={() => setLightboxIndex(n)}
-              className="group relative aspect-[4/5] w-full cursor-zoom-in overflow-hidden rounded-md bg-[#e8eeed] text-left ring-1 ring-[#dcdcd8] ring-inset transition hover:ring-[#c5cbc8] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#719B9A] focus-visible:ring-offset-2"
+              className={`group relative aspect-[4/5] w-full cursor-zoom-in overflow-hidden rounded-md bg-[#e8eeed] text-left ring-1 ring-[#dcdcd8] ring-inset transition hover:ring-[#c5cbc8] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#719B9A] focus-visible:ring-offset-2 ${
+                n > GALLERY_VISIBLE_MOBILE ? "hidden md:block" : ""
+              }`}
               aria-label={`Open gallery image ${n} front view larger`}
             >
               <span className="pointer-events-none absolute inset-0 block">
