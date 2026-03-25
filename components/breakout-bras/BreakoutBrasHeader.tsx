@@ -36,7 +36,7 @@ const NAV_ITEMS: NavDef[] = [
   {
     type: "dropdown",
     id: "swim-specialty",
-    label: "Swim & specialty",
+    label: "Swim & Specialty",
     items: [
       { label: "Swimwear", href: "/swimwear" },
       { label: "Post-Op", href: "/post-op" },
