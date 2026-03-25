@@ -12,6 +12,7 @@ import {
 import { ConfirmationButterflyBurst } from "./ConfirmationButterflyBurst";
 import { ConfirmationButterflies } from "./ConfirmationButterflies";
 import { QuizProgressButterfly } from "./QuizProgressButterfly";
+import { safeString } from "@/lib/safeReactText";
 import { FittingTypeIcon, QuizOptionIcon } from "./QuizOptionIcons";
 
 const TOTAL_STEPS = 12;
@@ -33,15 +34,17 @@ const BRA_SITUATIONS = [
 ];
 
 const BRABLEMS = [
-  "More Lift",
-  "Nipple Coverage",
-  "Straps That Stay Put",
-  "More Support",
-  "Back & Armhole Smoothing",
-  "Breathable",
-  "Gaping Cups",
-  "Temperature Regulating",
-];
+  "Underwires dig into my sides or sternum",
+  "Breast tissue spills over the top or sides of the cup",
+  "Cups gap or wrinkle, they don't fill out",
+  "My band rides up in the back throughout the day",
+  "My straps fall off my shoulders constantly",
+  "I have chronic back, neck, or shoulder pain",
+  "I'm not getting enough lift or shape",
+  "No major complaints, I just want better options",
+] as const;
+
+const BRABLEM_MAX = 3;
 
 const STYLES = [
   "Wireless",
@@ -94,16 +97,14 @@ const SLIDER_LABELS = ["Too small", "Slightly small", "Just right", "Slightly bi
 
 /** Range inputs must stay "1"–"5"; never let non-strings (e.g. a mistaken Event) into state or `sliderLabel`. */
 function normalizeFitSlider(value: unknown): string {
-  if (typeof value === "string") {
-    const t = value.trim();
-    if (/^[1-5]$/.test(t)) return t;
-  }
+  const t = safeString(value).trim();
+  if (/^[1-5]$/.test(t)) return t;
   return "3";
 }
 
 /** Always returns a string so React never tries to render an object (fixes "[object Event]" crashes). */
 function sliderLabel(value: unknown): string {
-  const raw = typeof value === "string" ? value : "";
+  const raw = safeString(value);
   const n = Number.parseInt(raw, 10);
   if (Number.isNaN(n) || n < 1 || n > 5) {
     return raw ? raw : SLIDER_LABELS[2];
@@ -220,7 +221,7 @@ function ConfirmationBookingScheduler() {
           </div>
           <Link
             href={appointmentsHref}
-            className="mt-3 flex w-full min-w-0 items-center justify-center gap-1.5 rounded-full bg-[#719B9A] px-3 py-2 text-[11px] font-semibold text-white transition hover:brightness-[1.03]"
+            className="mt-3 flex w-full min-w-0 items-center justify-center gap-1.5 rounded-full bg-[#E55932] px-3 py-2 text-[11px] font-semibold text-white transition hover:brightness-[1.03]"
           >
             Book this time
             <span aria-hidden>→</span>
@@ -374,25 +375,25 @@ export function BraFitQuiz() {
           : fittingType === "in-person"
             ? `In person · ${IN_PERSON_FITTING_ADDRESS}`
             : "",
-      bandSize,
-      cupSize,
-      brablems,
-      styles,
-      preferences,
-      cupFit,
+      bandSize: safeString(bandSize),
+      cupSize: safeString(cupSize),
+      brablems: brablems.map((s) => safeString(s)).filter(Boolean),
+      styles: styles.map((s) => safeString(s)).filter(Boolean),
+      preferences: preferences.map((s) => safeString(s)).filter(Boolean),
+      cupFit: normalizeFitSlider(cupFit),
       cupFitLabel: sliderLabel(cupFit),
-      bandFit,
+      bandFit: normalizeFitSlider(bandFit),
       bandFitLabel: sliderLabel(bandFit),
-      hookUsage,
-      braAge,
-      underwearStyles,
-      underwearSize,
-      braSituation,
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
-      zip: zip.trim(),
-      email,
-      phone,
+      hookUsage: safeString(hookUsage),
+      braAge: safeString(braAge),
+      underwearStyles: underwearStyles.map((s) => safeString(s)).filter(Boolean),
+      underwearSize: safeString(underwearSize),
+      braSituation: safeString(braSituation),
+      firstName: safeString(firstName).trim(),
+      lastName: safeString(lastName).trim(),
+      zip: safeString(zip).trim(),
+      email: safeString(email),
+      phone: safeString(phone),
       marketingConsent,
     }),
     [
@@ -521,7 +522,7 @@ export function BraFitQuiz() {
                 You&apos;re all set!
               </h2>
               <p className="text-xs leading-snug text-neutral-600 sm:text-sm">
-                Answers saved—we&apos;ll personalize recommendations from your fit profile.
+                Answers saved, we&apos;ll personalize recommendations from your fit profile.
               </p>
               <div className="mt-2 flex flex-wrap items-center justify-center gap-1.5 sm:justify-start">
                 <span className="rounded-full border border-[#719B9A]/25 bg-white/90 px-2 py-0.5 text-[10px] font-medium text-[#5a8584]">
@@ -610,7 +611,7 @@ export function BraFitQuiz() {
                 <div className="grid gap-0.5 py-1.5 sm:grid-cols-[minmax(0,9.5rem)_1fr] sm:gap-x-3">
                   <dt className="font-medium text-neutral-500">Underwear</dt>
                   <dd className="text-neutral-800">
-                    {quizPayload.underwearStyles.join(", ")} — {quizPayload.underwearSize}
+                    {quizPayload.underwearStyles.join(", ")}, {quizPayload.underwearSize}
                   </dd>
                 </div>
                 <div className="grid gap-0.5 py-1.5 pb-0 sm:grid-cols-[minmax(0,9.5rem)_1fr] sm:gap-x-3">
@@ -684,14 +685,14 @@ export function BraFitQuiz() {
                   setShowConfirmation(false);
                   setStep(1);
                 }}
-                className="rounded-full border-2 border-[#719B9A] bg-white px-6 py-2.5 text-sm font-semibold text-[#719B9A] shadow-sm transition hover:bg-[#f0f6f6]"
+                className="rounded-full border-2 border-[#E55932] bg-white px-6 py-2.5 text-sm font-semibold text-[#E55932] shadow-sm transition hover:bg-[#fef5f2]"
               >
                 Edit contact info
               </button>
               <button
                 type="button"
                 onClick={() => resetQuiz()}
-                className="rounded-full bg-[#719B9A] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:brightness-[1.03]"
+                className="rounded-full bg-[#E55932] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:brightness-[1.03]"
               >
                 Start over
               </button>
@@ -705,14 +706,14 @@ export function BraFitQuiz() {
         {step === 1 && (
           <div>
             <h2 className="mb-4 text-balance text-3xl font-bold leading-tight tracking-tight text-[#2d2c28] sm:mb-5 sm:text-4xl md:text-5xl">
-              The Bra-blem Solver - Find Your Feel-Good Size
+              Find Your Feel-Good Size Quiz
             </h2>
             <p className="mb-8 text-lg font-bold leading-snug text-[#2d2c28] sm:mb-10 sm:text-xl sm:leading-relaxed md:text-2xl">
               Tell us where to send your{" "}
-              <span className="relative inline-block rounded-md bg-[#719B9A] px-2.5 py-1 text-lg font-extrabold tracking-tight text-white shadow-sm sm:px-3 sm:text-xl md:text-2xl">
+              <span className="relative inline-block rounded-md bg-[#E55932] px-2.5 py-1 text-lg font-extrabold tracking-tight text-white shadow-sm sm:px-3 sm:text-xl md:text-2xl">
                 15% OFF
               </span>{" "}
-              code—then we&apos;ll ask a few quick questions to dial in your fit.
+              code, then we&apos;ll ask a few quick questions to dial in your fit.
             </p>
 
             <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
@@ -878,7 +879,7 @@ export function BraFitQuiz() {
           <div>
             <h2 className="mb-2 text-2xl font-semibold">What is your current bra size?</h2>
             <p className="mb-6 text-sm text-[#666]">
-              Even if it doesn&apos;t fit, that&apos;s OK — we are here to fix that!
+              Even if it doesn&apos;t fit, that&apos;s OK, we are here to fix that!
             </p>
             <div className="mb-6 flex flex-col gap-4 sm:flex-row">
               <BsFormGroup className="mb-0 flex-1">
@@ -930,18 +931,22 @@ export function BraFitQuiz() {
 
         {step === 4 && (
           <div>
-            <h2 className="mb-2 text-2xl font-semibold">Got a bra-blem? We have a solution.</h2>
-            <p className="mb-6 text-sm text-[#666]">Select up to 2</p>
-            <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <h2 className="mb-2 text-2xl font-semibold">
+              What is your bra actually doing to you?
+            </h2>
+            <p className="mb-6 text-sm leading-relaxed text-[#666]">
+              Every fit complaint has a specific fix. Select up to {BRABLEM_MAX}.
+            </p>
+            <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {BRABLEMS.map((o) => (
                 <button
                   key={o}
                   type="button"
-                  onClick={() => toggle(brablems, setBrablems, o, 2)}
+                  onClick={() => toggle(brablems, setBrablems, o, BRABLEM_MAX)}
                   className={optionCard(brablems.includes(o))}
                 >
                   <QuizOptionIcon group="brablem" label={o} selected={brablems.includes(o)} />
-                  <span className="min-w-0 flex-1 leading-snug">{o}</span>
+                  <span className="min-w-0 flex-1 text-left leading-snug">{o}</span>
                 </button>
               ))}
             </div>
@@ -1126,7 +1131,7 @@ export function BraFitQuiz() {
             type="button"
             disabled={!canNext}
             onClick={() => setStep((s) => s + 1)}
-            className="w-full rounded-full bg-[#719B9A] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-full bg-[#E55932] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
           >
             NEXT
           </button>
@@ -1138,7 +1143,7 @@ export function BraFitQuiz() {
               console.log("Find My Fit submission", quizPayload);
               setShowConfirmation(true);
             }}
-            className="w-full rounded-full bg-[#719B9A] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-full bg-[#E55932] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
           >
             GET RESULTS
           </button>

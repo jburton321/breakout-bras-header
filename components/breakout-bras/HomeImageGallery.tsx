@@ -25,7 +25,7 @@ export function HomeImageGallery() {
           Twice the detail. Zero guesswork.
         </h2>
         <p className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-relaxed text-[#5c5a56] sm:text-base">
-          Front, back, and every curve—hover any look to see how it fits from every angle. Real bras,
+          Front, back, and every curve, hover any look to see how it fits from every angle. Real bras,
           real views, so you can choose with confidence.
         </p>
       </div>
@@ -77,7 +77,7 @@ export function HomeImageGallery() {
         <div className="mt-8 flex justify-center sm:mt-9">
           <Link
             href="#find-my-fit-quiz"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#719B9A] px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#719B9A]"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#E55932] px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E55932]"
           >
             Find My Fit
           </Link>

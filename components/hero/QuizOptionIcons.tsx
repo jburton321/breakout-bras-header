@@ -87,46 +87,46 @@ function defaultIcon() {
 }
 
 const brablemIcons: Record<string, ReactNode> = {
-  "More Lift": (
+  "Underwires dig into my sides or sternum": (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
-      <path d="M12 19V5M7 10l5-5 5 5" />
+      <path d="M6 16c2-4 4-6 6-6s4 2 6 6M9 10l3-4 3 4" />
+      <path d="M8 18h8" />
     </svg>
   ),
-  "Nipple Coverage": (
+  "Breast tissue spills over the top or sides of the cup": (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
-      <circle cx="12" cy="12" r="3" />
-      <circle cx="12" cy="12" r="8" />
+      <path d="M6 14c2-3 4-4 6-4s4 1 6 4M5 10h3M16 10h3M10 8l2-2 2 2" />
+      <path d="M8 16c1 2 2 3 4 3s3-1 4-3" />
     </svg>
   ),
-  "Straps That Stay Put": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
-      <path d="M8 7c2 0 4-1 4-3M16 7c-2 0-4-1-4-3M8 17c2 0 4 1 4 3M16 17c-2 0-4 1-4 3M8 7v10M16 7v10" />
-    </svg>
-  ),
-  "More Support": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-  ),
-  "Back & Armhole Smoothing": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
-      <path d="M4 12c2 2 4 3 8 3s6-1 8-3M4 8c2-2 4-3 8-3s6 1 8 3" />
-      <path d="M4 16c2 2 4 3 8 3s6-1 8-3" />
-    </svg>
-  ),
-  Breathable: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
-      <path d="M9.59 4.59A2 2 0 1112 8H8m5 8a2 2 0 102-2m-5 4a2 2 0 11-2-2" />
-    </svg>
-  ),
-  "Gaping Cups": (
+  "Cups gap or wrinkle, they don't fill out": (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
       <path d="M8 8c2 2 4 2 8 0M8 16c2-2 4-2 8 0M12 4v16" />
     </svg>
   ),
-  "Temperature Regulating": (
+  "My band rides up in the back throughout the day": (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
-      <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" />
+      <path d="M4 14c3-2 6-3 8-3s5 1 8 3M6 10l6-4 6 4M10 18l2-3 2 3" />
+    </svg>
+  ),
+  "My straps fall off my shoulders constantly": (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
+      <path d="M8 7c2 0 4-1 4-3M16 7c-2 0-4-1-4-3M8 17c2 0 4 1 4 3M16 17c-2 0-4 1-4 3M8 7v10M16 7v10" />
+    </svg>
+  ),
+  "I have chronic back, neck, or shoulder pain": (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  ),
+  "I'm not getting enough lift or shape": (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
+      <path d="M12 19V5M7 10l5-5 5 5" />
+    </svg>
+  ),
+  "No major complaints, I just want better options": (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...stroke}>
+      <path d="M9 12l2 2 4-4M12 22c5 0 8-3 8-8 0-4-3-7-8-10-5 3-8 6-8 10 0 5 3 8 8 8z" />
     </svg>
   ),
 };

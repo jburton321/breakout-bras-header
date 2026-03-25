@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { StaticSiteLogoImg } from "./Logo";
 
 const TEAL = "#719B9A";
 
@@ -65,33 +66,27 @@ export function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="min-w-0">
             <Link href="/" className="inline-block max-w-full">
-              <img
-                src="/logo/logo-grey.svg"
-                alt="Breakout Bras"
-                width={776}
-                height={167}
-                className="block h-10 w-auto max-w-full sm:h-12"
-              />
+              <StaticSiteLogoImg />
             </Link>
             <div className="mt-6 space-y-3 text-sm">
               <p className="flex items-start gap-3">
-                <LocationIcon className="mt-0.5 h-5 w-5 shrink-0" />
+                <LocationIcon className="mt-0.5 h-5 w-5 shrink-0 text-[#E55932]" />
                 525 Haywood Rd, Greenville, SC 29607
               </p>
               <p className="flex items-center gap-3">
-                <PhoneIcon className="h-5 w-5 shrink-0" />
+                <PhoneIcon className="h-5 w-5 shrink-0 text-[#E55932]" />
                 <a href="tel:+18646270200" className="hover:underline">
                   1-864-627-0200
                 </a>
               </p>
               <p className="flex items-center gap-3">
-                <EmailIcon className="h-5 w-5 shrink-0" />
+                <EmailIcon className="h-5 w-5 shrink-0 text-[#E55932]" />
                 <a href="mailto:service@breakoutbras.com" className="hover:underline">
                   service@breakoutbras.com
                 </a>
               </p>
               <div className="flex items-start gap-3">
-                <ClockIcon className="mt-0.5 h-5 w-5 shrink-0" />
+                <ClockIcon className="mt-0.5 h-5 w-5 shrink-0 text-[#E55932]" />
                 <div>
                   <p className="font-medium">Retail Store Hours (EST):</p>
                   <p>Monday–Thursday 12–7, Friday and Sat 10–6.</p>
@@ -138,19 +133,17 @@ export function Footer() {
               Be the first to know about special promotions and deals!
             </p>
             <form
-              className="mb-6 flex overflow-hidden rounded-lg border"
-              style={{ borderColor: TEAL }}
+              className="mb-6 flex overflow-hidden rounded-lg border border-[#E55932]"
               onSubmit={(e) => e.preventDefault()}
             >
               <input
                 type="email"
                 placeholder="Email"
-                className="min-w-0 flex-1 border-0 px-4 py-2.5 text-sm outline-none"
+                className="min-w-0 flex-1 border-0 px-4 py-2.5 text-sm text-neutral-800 outline-none"
               />
               <button
                 type="submit"
-                className="px-4 py-2.5 text-sm font-medium text-white"
-                style={{ backgroundColor: TEAL }}
+                className="bg-[#E55932] px-4 py-2.5 text-sm font-medium text-white transition hover:brightness-[1.03]"
               >
                 Sign Up
               </button>

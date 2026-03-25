@@ -1,0 +1,31 @@
+---
+description: Stability guardrails — Next.js app, no unsolicited UI churn, verify builds
+alwaysApply: true
+---
+
+# Breakout Bras — Cursor agent rules
+
+## Do not change without explicit request
+
+- **Visual design, layout, spacing, typography, colors, Tailwind classes** in `app/`, `components/`, `public/`, and `app/globals.css` — treat as locked unless the user asked for that change.
+- **Scope**: Make the **smallest diff** that satisfies the task. No drive-by refactors, no “cleanup” in unrelated files.
+
+## Stack (stay consistent)
+
+- **Next.js 15** App Router, **React 19**, **Tailwind CSS**, `@/` path alias (`tsconfig` paths).
+- Prefer **Server Components** unless the feature needs hooks, browser APIs, or event handlers (`"use client"`).
+
+## After edits (required for non-trivial changes)
+
+- Run **`npm run build`** before considering work done. Fix TypeScript and ESLint failures you introduce.
+- If **dev server returns 500** or missing chunks: stop dev, run **`npm run dev:clean`** or **`npm run dev:safe`** (clears `.next` and `node_modules/.cache`). Default dev already clears caches — do not remove that pattern without cause.
+
+## Project-specific tooling
+
+- **`next.config.ts`**: `experimental.devtoolSegmentExplorer: false` avoids known Next 15 devtools/webpack issues. **Webpack cache is disabled** in dev and prod builds here to reduce stale-chunk errors on busy or synced disks — do not “re-enable cache for speed” without discussion.
+- Prefer **`npm run dev`** (webpack) over **`dev:turbopack`** on Desktop/iCloud-synced project folders unless the user insists.
+
+## When the user reports “Internal Server Error”
+
+- First suspect **stale `.next` / cache** — recommend `npm run dev:safe` or `rm -rf .next node_modules/.cache && npm run dev`.
+- Then check **terminal stack traces**; avoid guessing.

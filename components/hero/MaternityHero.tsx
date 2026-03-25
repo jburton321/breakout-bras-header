@@ -1,9 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Logo } from "@/components/breakout-bras/Logo";
 import { BraFitQuiz } from "./BraFitQuiz";
-import { SLIDE_BG_CROSSFADE_EASE, SLIDE_BG_CROSSFADE_MS } from "@/lib/heroSlideMotion";
+import {
+  SLIDE_BG_CROSSFADE_EASE,
+  SLIDE_BG_CROSSFADE_MS,
+  SLIDE_COPY_FADE_EASE,
+  SLIDE_COPY_FADE_MS,
+} from "@/lib/heroSlideMotion";
 
 const SLIDES: Array<{
   id: string;
@@ -11,6 +17,8 @@ const SLIDES: Array<{
   subtitle: string;
   href: string;
   backgroundImage?: string;
+  /** Narrow/mobile art direction — shown below `sm` (640px). */
+  backgroundImageMobile?: string;
 }> = [
   {
     id: "bras",
@@ -19,6 +27,7 @@ const SLIDES: Array<{
       "Find your perfect fit with this quick 1-minute quiz.",
     href: "/bras",
     backgroundImage: "/images/Slide1.png",
+    backgroundImageMobile: "/images/M-Slide1.png",
   },
   {
     id: "fitting",
@@ -27,6 +36,7 @@ const SLIDES: Array<{
       "Let our expert team guide you. Book your dedicated in-store or virtual appointment now.",
     href: "/appointments",
     backgroundImage: "/images/Slide2.png",
+    backgroundImageMobile: "/images/M-Slide2.png",
   },
   {
     id: "sports",
@@ -35,6 +45,7 @@ const SLIDES: Array<{
       "Experience bras that move with you, offering unbeatable support, comfort, and real lift.",
     href: "/bras",
     backgroundImage: "/images/Slide3.png",
+    backgroundImageMobile: "/images/M-Slide3.png",
   },
 ];
 
@@ -58,63 +69,91 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
 
   return (
     <section
-      className="relative w-full overflow-hidden"
+      className="relative isolate min-h-[min(28vh,280px)] w-full overflow-hidden"
       aria-label="Featured"
       style={
         {
-          "--hero-slide-copy-duration": `${SLIDE_BG_CROSSFADE_MS}ms`,
-          "--hero-slide-copy-ease": SLIDE_BG_CROSSFADE_EASE,
-        } as React.CSSProperties
+          "--hero-slide-copy-duration": `${SLIDE_COPY_FADE_MS}ms`,
+          "--hero-slide-copy-ease": SLIDE_COPY_FADE_EASE,
+        } as CSSProperties
       }
     >
-      {/* Background: stacked layers, opacity-only crossfade — no Framer */}
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
+      {/* Background: `next/image` + object-cover preserves aspect ratio (no stretched “fill”) */}
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
         {SLIDES.map((s, i) => {
-          const src = s.backgroundImage ?? backgroundImage;
-          if (!src) return null;
+          const desktopSrc = s.backgroundImage ?? backgroundImage;
+          const mobileSrc = s.backgroundImageMobile ?? desktopSrc;
+          if (!desktopSrc && !mobileSrc) return null;
+          const isActive = i === active;
+          const layerTransition = {
+            opacity: isActive ? 1 : 0,
+            transitionDuration: `${SLIDE_BG_CROSSFADE_MS}ms`,
+            transitionTimingFunction: SLIDE_BG_CROSSFADE_EASE,
+          } as const;
           return (
             <div
               key={s.id}
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity"
-              style={{
-                backgroundImage: `url(${src})`,
-                opacity: i === active ? 1 : 0,
-                transitionDuration: `${SLIDE_BG_CROSSFADE_MS}ms`,
-                transitionTimingFunction: SLIDE_BG_CROSSFADE_EASE,
-                zIndex: i === active ? 1 : 0,
-              }}
-            />
+              className="absolute inset-0"
+              style={{ zIndex: isActive ? 1 : 0 }}
+            >
+              {mobileSrc ? (
+                <div className="absolute inset-0 sm:hidden">
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={mobileSrc}
+                      alt=""
+                      fill
+                      sizes="100vw"
+                      className="object-cover object-center transition-opacity"
+                      style={layerTransition}
+                      priority={i === 0}
+                      draggable={false}
+                    />
+                  </div>
+                </div>
+              ) : null}
+              {desktopSrc ? (
+                <div className="absolute inset-0 hidden sm:block">
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={desktopSrc}
+                      alt=""
+                      fill
+                      sizes="100vw"
+                      className="object-cover object-center transition-opacity"
+                      style={layerTransition}
+                      priority={i === 0}
+                      draggable={false}
+                    />
+                  </div>
+                </div>
+              ) : null}
+            </div>
           );
         })}
       </div>
 
-      <div
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.65)_0%,rgba(255,255,255,0.35)_50%,transparent_100%)]"
-        aria-hidden
-      />
-
-      <div className="relative z-10 flex flex-col">
-        <div className="flex min-h-[min(55vh,480px)] flex-col items-start justify-center px-page pt-16 pb-2 text-left sm:pt-20">
-          <div className="relative mx-auto min-h-[22rem] w-full max-w-wrapper sm:min-h-[24rem]">
-            <div className="absolute left-0 top-0 w-full max-w-2xl">
-              <div className="mb-6 [&_svg]:h-20 [&_svg]:w-auto sm:[&_svg]:h-24">
-                <Logo />
-              </div>
-
-              <div className="relative h-[23rem] w-full overflow-hidden sm:h-[25rem] md:h-[26rem]">
+      <div className="relative z-[1] flex flex-col">
+        <div className="flex min-h-[min(28vh,280px)] flex-col items-start justify-center px-page pt-8 pb-2 text-left sm:pt-12 md:pt-16">
+          <div className="relative mx-auto w-full max-w-wrapper">
+            <div className="w-full max-w-3xl">
+              <div className="relative min-h-[10rem] w-full sm:min-h-[12rem] md:min-h-[14rem]">
                 <article
                   key={active}
-                  className="hero-slide-copy-in absolute inset-0 flex max-w-2xl flex-col justify-start"
+                  className="hero-slide-copy-in grid w-full grid-cols-[auto,minmax(0,1fr)] items-center gap-x-2.5 gap-y-3 sm:gap-x-4 md:gap-x-5"
                   aria-live="polite"
                 >
-                  <div className="min-h-[7.5rem] sm:min-h-[8.5rem] md:min-h-[9.5rem]">
-                    <h1 className="text-4xl font-bold leading-tight tracking-tight text-neutral-900 sm:text-5xl md:text-6xl">
+                  <div className="col-start-1 row-start-1 flex shrink-0 items-center">
+                    <Logo variant="slider" />
+                  </div>
+                  <div className="col-start-2 row-start-1 flex min-w-0 items-center">
+                    <h1 className="text-3xl font-bold leading-tight tracking-tight text-neutral-900 min-[400px]:text-4xl sm:text-5xl md:text-6xl">
                       {slide.title[0]}
                       <br />
                       {slide.title[1]}
                     </h1>
                   </div>
-                  <p className="mt-2 max-w-lg text-base leading-snug text-neutral-800 sm:text-lg md:text-xl">
+                  <p className="col-start-2 row-start-2 self-start max-w-lg text-base leading-snug text-neutral-800 sm:text-lg md:text-xl">
                     {slide.subtitle}
                   </p>
                 </article>
@@ -127,8 +166,11 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
           id="find-my-fit-quiz"
           className="scroll-mt-24 w-full px-page pb-16 pt-0 sm:pb-8"
         >
-          <div className="mx-auto w-full max-w-wrapper">
-            <BraFitQuiz />
+          {/* Same outer/inner pattern as hero copy: wrapper centers in viewport; inner column is left-aligned */}
+          <div className="relative mx-auto w-full max-w-wrapper">
+            <div className="w-full max-w-3xl lg:max-w-[min(100%,calc(var(--content-wrapper)/2))]">
+              <BraFitQuiz />
+            </div>
           </div>
         </div>
       </div>

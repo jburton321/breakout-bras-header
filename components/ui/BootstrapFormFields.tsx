@@ -5,6 +5,7 @@ import {
   type SelectHTMLAttributes,
   forwardRef,
 } from "react";
+import { safeString } from "@/lib/safeReactText";
 
 function cn(...parts: Array<string | undefined | false>) {
   return parts.filter(Boolean).join(" ");
@@ -13,10 +14,10 @@ function cn(...parts: Array<string | undefined | false>) {
 /** Prevents Event/objects from reaching controlled input value (avoids "[object Event]" crashes). */
 function safeInputValue(v: unknown): string | number | readonly string[] | undefined {
   if (v === undefined || v === null) return undefined;
-  if (typeof v === "string") return v;
   if (typeof v === "number") return v;
   if (Array.isArray(v)) return v;
-  return "";
+  if (typeof v === "string") return v;
+  return safeString(v);
 }
 
 function safeSelectValue(
@@ -30,7 +31,7 @@ function safeSelectValue(
   }
   if (typeof v === "string") return v;
   if (typeof v === "number") return v;
-  return "";
+  return safeString(v);
 }
 
 /** Bootstrap 5–style field wrapper (`mb-3`). */

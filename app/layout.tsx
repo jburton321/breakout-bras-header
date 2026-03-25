@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
-import { Cormorant_Garamond, Montserrat } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { Cormorant_Garamond, Montserrat } from "next/font/google";
+import { BreakoutBrasHeader } from "@/components/breakout-bras/BreakoutBrasHeader";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -28,16 +29,38 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning style={{ minHeight: "100dvh" }}>
       <body
         className={`${montserrat.variable} ${cormorant.variable} font-sans antialiased`}
+        style={{ minHeight: "100dvh", margin: 0 }}
         suppressHydrationWarning
       >
-        {children}
+        <noscript>
+          <div
+            style={{
+              padding: "1rem",
+              fontFamily: "system-ui, sans-serif",
+              background: "#fff8e6",
+              borderBottom: "1px solid #e6d9a8",
+            }}
+          >
+            JavaScript is required for the full Breakout Bras experience (quiz, navigation). Enable JavaScript in your
+            browser, or open this site in a regular browser window (not a stripped-down preview).
+          </div>
+        </noscript>
+        <BreakoutBrasHeader />
+        <main id="main" className="w-full min-h-[100dvh]">
+          {children}
+        </main>
       </body>
     </html>
   );

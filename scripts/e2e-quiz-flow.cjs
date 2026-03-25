@@ -42,7 +42,7 @@ async function main() {
   await next().click();
 
   // Steps 4–12
-  await pick("More Lift").click();
+  await pick("I'm not getting enough lift").click();
   await next().click();
 
   await pick("Wireless").click();

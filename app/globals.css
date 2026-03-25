@@ -15,6 +15,22 @@
   --foreground: #4D5152;
 }
 
+/* Plain CSS: keep document box non-zero even if utilities are slow/missing (avoids blank 0-height html in some previews). */
+html {
+  display: block;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+body {
+  display: block;
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--foreground);
+  background: var(--background);
+}
+
 @layer components {
   .px-page {
     @apply px-4 sm:px-6 lg:px-8;
@@ -61,11 +77,6 @@
   .form-text {
     @apply mt-1 text-xs text-[#6c757d];
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
 }
 
 /* Animated bird — paths & paint order from Watermark_animated.html */
@@ -198,10 +209,10 @@ body {
   animation-delay: var(--burst-delay, 0s);
 }
 
-/* Hero headline: fade-in on slide change only (no exit layer — avoids overlap bugs) */
+/* Hero headline: quick opacity-only fade on slide change (no translate — avoids glitchy drift vs background) */
 @keyframes hero-slide-copy-in {
   from {
-    opacity: 0;
+    opacity: 0.9;
   }
   to {
     opacity: 1;
@@ -209,13 +220,14 @@ body {
 }
 
 .hero-slide-copy-in {
-  animation: hero-slide-copy-in var(--hero-slide-copy-duration, 2000ms)
-    var(--hero-slide-copy-ease, cubic-bezier(0.25, 0.46, 0.45, 0.94)) forwards;
+  opacity: 1;
+  animation: hero-slide-copy-in var(--hero-slide-copy-duration, 260ms)
+    var(--hero-slide-copy-ease, ease-out) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-slide-copy-in {
-    animation-duration: 0.01ms;
+    animation: none;
   }
 }
 

@@ -1,0 +1,7 @@
+# Reduce indexer noise and accidental AI edits to generated/vendor output
+.next/
+node_modules/
+out/
+build/
+coverage/
+*.tsbuildinfo

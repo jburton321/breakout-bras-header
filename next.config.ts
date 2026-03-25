@@ -12,9 +12,10 @@ const nextConfig: NextConfig = {
     moduleIds: "named",
   },
   webpack: (config, { isServer, dev }) => {
-    // Only tune webpack for production builds. In dev, mixing custom webpack cache/optimization
-    // with Turbopack or rapid HMR can contribute to stale chunk manifests (e.g. missing ./331.js).
+    // In dev, disable persistent webpack cache — same class of issue as stale .next (missing
+    // vendor chunks → 500 / "Internal Server Error"), especially on synced or busy disks.
     if (dev) {
+      config.cache = false;
       return config;
     }
 
