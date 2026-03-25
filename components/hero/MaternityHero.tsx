@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "@/components/breakout-bras/Logo";
 import { BraFitQuiz } from "./BraFitQuiz";
 import { SLIDE_BG_CROSSFADE_EASE, SLIDE_BG_CROSSFADE_MS } from "@/lib/heroSlideMotion";
@@ -9,7 +9,6 @@ const SLIDES: Array<{
   id: string;
   title: [string, string];
   subtitle: string;
-  label: string;
   href: string;
   backgroundImage?: string;
 }> = [
@@ -18,7 +17,6 @@ const SLIDES: Array<{
     title: ["Say Goodbye to", "Bad Bra Days"],
     subtitle:
       "Find your perfect fit with this quick 1-minute quiz.",
-    label: "Shop Bras",
     href: "/bras",
     backgroundImage: "/images/Slide1.png",
   },
@@ -27,7 +25,6 @@ const SLIDES: Array<{
     title: ["Get Fit", "by the Pros"],
     subtitle:
       "Let our expert team guide you. Book your dedicated in-store or virtual appointment now.",
-    label: "Book a Fitting",
     href: "/appointments",
     backgroundImage: "/images/Slide2.png",
   },
@@ -36,7 +33,6 @@ const SLIDES: Array<{
     title: ["Strong, Soft, and", "Completely Secure"],
     subtitle:
       "Experience bras that move with you, offering unbeatable support, comfort, and real lift.",
-    label: "Sports Bras",
     href: "/bras",
     backgroundImage: "/images/Slide3.png",
   },
@@ -50,28 +46,11 @@ type MaternityHeroProps = {
 
 export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
   const [active, setActive] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const startTimeRef = useRef(Date.now());
-
-  const goTo = useCallback((index: number) => {
-    const i = ((index % SLIDES.length) + SLIDES.length) % SLIDES.length;
-    setActive(i);
-    setProgress(0);
-    startTimeRef.current = Date.now();
-  }, []);
 
   useEffect(() => {
-    const tick = () => {
-      const elapsed = Date.now() - startTimeRef.current;
-      const p = Math.min(100, (elapsed / ROTATE_MS) * 100);
-      setProgress(p);
-      if (p >= 100) {
-        setActive((i) => (i + 1) % SLIDES.length);
-        setProgress(0);
-        startTimeRef.current = Date.now();
-      }
-    };
-    const id = window.setInterval(tick, 50);
+    const id = window.setInterval(() => {
+      setActive((i) => (i + 1) % SLIDES.length);
+    }, ROTATE_MS);
     return () => window.clearInterval(id);
   }, []);
 
@@ -150,49 +129,6 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
         >
           <div className="mx-auto w-full max-w-wrapper">
             <BraFitQuiz />
-          </div>
-        </div>
-
-        <div className="w-full px-page pb-4 pt-2 sm:pb-6">
-          <div className="mx-auto w-full max-w-wrapper">
-            <div className="rounded-2xl border border-white/20 bg-white/70 px-5 py-3 backdrop-blur-xl backdrop-saturate-150 sm:px-6 sm:py-4">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
-                <div className="min-w-0 flex-1">
-                  <div className="grid grid-cols-2 gap-x-3 gap-y-2 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-2">
-                    {SLIDES.map((item, index) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => goTo(index)}
-                        className="group relative text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500"
-                        aria-current={index === active}
-                        aria-label={`Show ${item.label}`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`shrink-0 text-left text-[10px] sm:text-[11px] md:text-xs ${
-                              index === active
-                                ? "font-semibold text-neutral-900"
-                                : "font-normal text-neutral-600 group-hover:text-neutral-800"
-                            }`}
-                          >
-                            {item.label}
-                          </span>
-                          <div className="relative h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-neutral-300">
-                            {index === active && (
-                              <div
-                                className="absolute inset-y-0 left-0 rounded-full bg-neutral-700 transition-[width] duration-75 ease-linear"
-                                style={{ width: `${progress}%` }}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

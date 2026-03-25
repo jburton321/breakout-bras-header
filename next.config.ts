@@ -2,8 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
-  // Dev (`next dev --turbopack`) uses Turbopack; keep module id strategy explicit so it matches
-  // the intent of the production webpack server config below and avoids “webpack only” drift.
+  /** Avoids dev 500s: "SegmentViewNode" missing from React Client Manifest (Next devtools + webpack). */
+  experimental: {
+    devtoolSegmentExplorer: false,
+  },
+  // Used when you run `npm run dev:turbopack` (optional). Default `npm run dev` uses webpack — better
+  // on Desktop/iCloud-synced folders where Turbopack’s churn under .next can race with sync daemons.
   turbopack: {
     moduleIds: "named",
   },

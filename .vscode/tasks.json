@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Open localhost:3000 in Simple Browser",
+      "label": "Open 127.0.0.1:3000 in Simple Browser",
       "type": "shell",
       "command": "echo ${input:openSimpleBrowser}",
       "problemMatcher": [],
@@ -12,6 +12,24 @@
         "focus": false,
         "panel": "shared"
       }
+    },
+    {
+      "label": "Dev: LAN (all interfaces, port 3000)",
+      "type": "shell",
+      "command": "npm run dev:lan",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
     }
   ],
   "inputs": [
@@ -19,7 +37,7 @@
       "id": "openSimpleBrowser",
       "type": "command",
       "command": "simpleBrowser.api.open",
-      "args": ["http://localhost:3000/"]
+      "args": ["http://127.0.0.1:3000/"]
     }
   ]
 }

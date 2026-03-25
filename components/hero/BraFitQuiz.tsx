@@ -16,6 +16,12 @@ import { FittingTypeIcon, QuizOptionIcon } from "./QuizOptionIcons";
 
 const TOTAL_STEPS = 12;
 
+/** Minimum % fill on step 1 so the bar reads as a multi-step flow, not empty. */
+const PROGRESS_MIN_PCT = 7;
+
+/** Pixels to nudge the moth past the fill tip so it does not sit on the bar edge. */
+const BUTTERFLY_LEAD_OFFSET_PX = 24;
+
 /** Store visit address when customer chooses in-person fitting (step 2). */
 const IN_PERSON_FITTING_ADDRESS = "525 Haywood Rd, Greenville, SC 29607";
 
@@ -86,9 +92,22 @@ const CUP_SIZES = ["AA", "A", "B", "C", "D", "DD", "E", "F", "G", "H", "I"];
 
 const SLIDER_LABELS = ["Too small", "Slightly small", "Just right", "Slightly big", "Too big"];
 
-function sliderLabel(value: string) {
-  const n = Number.parseInt(value, 10);
-  if (Number.isNaN(n) || n < 1 || n > 5) return value;
+/** Range inputs must stay "1"–"5"; never let non-strings (e.g. a mistaken Event) into state or `sliderLabel`. */
+function normalizeFitSlider(value: unknown): string {
+  if (typeof value === "string") {
+    const t = value.trim();
+    if (/^[1-5]$/.test(t)) return t;
+  }
+  return "3";
+}
+
+/** Always returns a string so React never tries to render an object (fixes "[object Event]" crashes). */
+function sliderLabel(value: unknown): string {
+  const raw = typeof value === "string" ? value : "";
+  const n = Number.parseInt(raw, 10);
+  if (Number.isNaN(n) || n < 1 || n > 5) {
+    return raw ? raw : SLIDER_LABELS[2];
+  }
   return SLIDER_LABELS[n - 1];
 }
 
@@ -252,8 +271,7 @@ export function BraFitQuiz() {
           lastName.trim().length > 0 &&
           isValidUsZip(zip) &&
           email.includes("@") &&
-          email.includes(".") &&
-          marketingConsent
+          email.includes(".")
         );
       case 2:
         return fittingType !== "";
@@ -297,10 +315,11 @@ export function BraFitQuiz() {
     lastName,
     zip,
     email,
-    marketingConsent,
   ]);
 
-  const progress = showConfirmation ? 100 : ((step - 1) / (TOTAL_STEPS - 1)) * 100;
+  const progress = showConfirmation
+    ? 100
+    : PROGRESS_MIN_PCT + ((step - 1) / (TOTAL_STEPS - 1)) * (100 - PROGRESS_MIN_PCT);
 
   /** Butterfly trails the fill with eased catch-up (glide); bar stays snappy. */
   const butterflyGlideRef = useRef(progress);
@@ -444,15 +463,18 @@ export function BraFitQuiz() {
       }`}
     >
       {!showConfirmation && (
-        <div className="relative mb-6 w-full pt-7 pb-1">
+        <div className="relative mb-6 w-full overflow-visible pr-8 pt-7 pb-1 sm:pr-10">
           <div className="absolute left-0 right-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-[#eee]" />
           <div
             className="absolute left-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-[#719B9A] transition-[width] duration-[280ms] ease-out"
             style={{ width: `${progress}%` }}
           />
           <div
-            className="quiz-progress-butterfly-anchor pointer-events-none absolute top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
-            style={{ left: `${butterflyGlide}%` }}
+            className="quiz-progress-butterfly-anchor pointer-events-none absolute top-1/2 z-10"
+            style={{
+              left: `${butterflyGlide}%`,
+              transform: `translate(calc(-50% + ${BUTTERFLY_LEAD_OFFSET_PX}px), -50%)`,
+            }}
             aria-hidden
           >
             <QuizProgressButterfly />
@@ -563,14 +585,18 @@ export function BraFitQuiz() {
                   <dt className="font-medium text-neutral-500">Cup fit</dt>
                   <dd className="text-neutral-800">
                     {quizPayload.cupFitLabel}{" "}
-                    <span className="text-neutral-400">({quizPayload.cupFit}/5)</span>
+                    <span className="text-neutral-400">
+                      ({normalizeFitSlider(quizPayload.cupFit)}/5)
+                    </span>
                   </dd>
                 </div>
                 <div className="grid gap-0.5 py-1.5 sm:grid-cols-[minmax(0,9.5rem)_1fr] sm:gap-x-3">
                   <dt className="font-medium text-neutral-500">Band fit</dt>
                   <dd className="text-neutral-800">
                     {quizPayload.bandFitLabel}{" "}
-                    <span className="text-neutral-400">({quizPayload.bandFit}/5)</span>
+                    <span className="text-neutral-400">
+                      ({normalizeFitSlider(quizPayload.bandFit)}/5)
+                    </span>
                   </dd>
                 </div>
                 <div className="grid gap-0.5 py-1.5 sm:grid-cols-[minmax(0,9.5rem)_1fr] sm:gap-x-3">
@@ -664,7 +690,7 @@ export function BraFitQuiz() {
               </button>
               <button
                 type="button"
-                onClick={resetQuiz}
+                onClick={() => resetQuiz()}
                 className="rounded-full bg-[#719B9A] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:brightness-[1.03]"
               >
                 Start over
@@ -773,7 +799,7 @@ export function BraFitQuiz() {
               <BsFormCheck
                 id="marketing-consent"
                 checked={marketingConsent}
-                onChange={setMarketingConsent}
+                onChange={(checked) => setMarketingConsent(checked)}
                 labelClassName="text-left text-xs leading-relaxed text-[#555] sm:text-[13px] sm:leading-relaxed"
                 label={
                   <>
@@ -972,7 +998,7 @@ export function BraFitQuiz() {
                 type="range"
                 min={1}
                 max={5}
-                value={cupFit}
+                value={normalizeFitSlider(cupFit)}
                 onChange={(e) => setCupFit(e.target.value)}
                 className="mb-2 mt-6 h-1.5 w-full cursor-pointer appearance-none rounded bg-[#ddd] accent-[#719B9A]"
               />
@@ -993,7 +1019,7 @@ export function BraFitQuiz() {
                 type="range"
                 min={1}
                 max={5}
-                value={bandFit}
+                value={normalizeFitSlider(bandFit)}
                 onChange={(e) => setBandFit(e.target.value)}
                 className="mb-2 mt-6 h-1.5 w-full cursor-pointer appearance-none rounded bg-[#ddd] accent-[#719B9A]"
               />
@@ -1100,7 +1126,7 @@ export function BraFitQuiz() {
             type="button"
             disabled={!canNext}
             onClick={() => setStep((s) => s + 1)}
-            className="w-full rounded-full bg-[#719B9A] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed"
+            className="w-full rounded-full bg-[#719B9A] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
           >
             NEXT
           </button>
@@ -1112,7 +1138,7 @@ export function BraFitQuiz() {
               console.log("Find My Fit submission", quizPayload);
               setShowConfirmation(true);
             }}
-            className="w-full rounded-full bg-[#719B9A] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed"
+            className="w-full rounded-full bg-[#719B9A] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
           >
             GET RESULTS
           </button>
