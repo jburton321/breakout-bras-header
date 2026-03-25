@@ -444,14 +444,14 @@ export function BraFitQuiz() {
   }, []);
 
   const optionCard = (sel: boolean) =>
-    `flex min-h-[3.5rem] flex-row items-center gap-3 rounded-lg border px-3 py-2.5 text-left text-xs font-medium transition sm:min-h-[3.75rem] sm:text-sm ${
+    `flex min-h-[3.5rem] w-full min-w-0 max-w-full flex-row items-center gap-3 rounded-lg border px-3 py-2.5 text-left text-xs font-medium transition sm:min-h-[3.75rem] sm:text-sm ${
       sel
         ? "border-[#719B9A] bg-[#719B9A] text-white"
         : "border-[#ddd] bg-white hover:border-[#719B9A] hover:bg-[#f0f6f6]"
     }`;
 
   const fittingCard = (sel: boolean) =>
-    `flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg border px-4 py-4 text-left text-sm font-medium transition ${
+    `flex w-full min-w-0 max-w-full cursor-pointer flex-row items-center gap-3 rounded-lg border px-4 py-4 text-left text-sm font-medium transition ${
       sel
         ? "border-[#719B9A] bg-[#719B9A] text-white"
         : "border-[#ddd] bg-white hover:border-[#719B9A] hover:bg-[#f0f6f6]"
@@ -459,7 +459,7 @@ export function BraFitQuiz() {
 
   return (
     <div
-      className={`w-full rounded-2xl border border-white/20 bg-white/70 text-[#3b3a36] backdrop-blur-xl backdrop-saturate-150 ${
+      className={`w-full min-w-0 max-w-full rounded-2xl border border-white/20 bg-white/70 text-[#3b3a36] backdrop-blur-xl backdrop-saturate-150 ${
         showConfirmation ? "p-4 sm:p-5" : "p-6 sm:p-8 md:p-10"
       }`}
     >
@@ -704,13 +704,13 @@ export function BraFitQuiz() {
         <>
       <form onSubmit={(e) => e.preventDefault()}>
         {step === 1 && (
-          <div>
-            <h2 className="mb-4 text-balance text-3xl font-bold leading-tight tracking-tight text-[#2d2c28] sm:mb-5 sm:text-4xl md:text-5xl">
+          <div className="min-w-0 max-w-full">
+            <h2 className="mb-4 max-w-full text-balance break-words text-2xl font-bold leading-tight tracking-tight text-[#2d2c28] sm:mb-5 sm:text-3xl md:text-4xl lg:text-5xl">
               Find Your Feel-Good Size Quiz
             </h2>
-            <p className="mb-8 text-lg font-bold leading-snug text-[#2d2c28] sm:mb-10 sm:text-xl sm:leading-relaxed md:text-2xl">
+            <p className="mb-8 max-w-full text-pretty break-words text-base font-bold leading-snug text-[#2d2c28] sm:mb-10 sm:text-lg sm:leading-relaxed md:text-xl lg:text-2xl">
               Tell us where to send your{" "}
-              <span className="relative inline-block rounded-md bg-[#E55932] px-2.5 py-1 text-lg font-extrabold tracking-tight text-white shadow-sm sm:px-3 sm:text-xl md:text-2xl">
+              <span className="relative inline-block max-w-full rounded-md bg-[#E55932] px-2 py-1 text-base font-extrabold tracking-tight text-white shadow-sm sm:px-2.5 sm:text-lg md:px-3 md:text-xl lg:text-2xl">
                 15% OFF
               </span>{" "}
               code, then we&apos;ll ask a few quick questions to dial in your fit.

@@ -4,8 +4,8 @@ import { MaternityHero } from "@/components/hero/MaternityHero";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="relative">
+    <div className="min-h-screen min-w-0 bg-white">
+      <div className="relative min-w-0">
         <MaternityHero />
       </div>
       <HomeImageGallery />

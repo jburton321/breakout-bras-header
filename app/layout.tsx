@@ -58,7 +58,7 @@ export default function RootLayout({
           </div>
         </noscript>
         <BreakoutBrasHeader />
-        <main id="main" className="w-full min-h-[100dvh]">
+        <main id="main" className="w-full min-w-0 min-h-[100dvh]">
           {children}
         </main>
       </body>

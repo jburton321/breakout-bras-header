@@ -48,7 +48,7 @@ const NAV: NavClasses = {
 const SLIDER: SliderClasses = {
   root: "inline-flex shrink-0 items-end",
   markClassName: "shrink-0",
-  markSvgClassName: "h-16 w-auto sm:h-20 md:h-24",
+  markSvgClassName: "h-12 w-auto sm:h-16 md:h-20 lg:h-24",
 };
 
 export type LogoProps = {

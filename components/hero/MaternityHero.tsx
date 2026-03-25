@@ -111,27 +111,27 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
         })}
       </div>
 
-      <div className="relative z-[1] flex flex-col">
-        <div className="flex min-h-[min(28vh,280px)] flex-col items-start justify-center px-page pt-8 pb-2 text-left sm:pt-12 md:pt-16">
-          <div className="relative mx-auto w-full max-w-wrapper">
-            <div className="w-full max-w-3xl">
-              <div className="relative min-h-[10rem] w-full sm:min-h-[12rem] md:min-h-[14rem]">
+      <div className="relative z-[1] flex min-w-0 flex-col">
+        <div className="flex min-h-[min(28vh,280px)] min-w-0 flex-col items-start justify-center px-page pt-8 pb-2 text-left sm:pt-12 md:pt-16">
+          <div className="relative mx-auto w-full min-w-0 max-w-wrapper">
+            <div className="w-full min-w-0 max-w-3xl">
+              <div className="relative min-h-[10rem] w-full min-w-0 sm:min-h-[12rem] md:min-h-[14rem]">
                 <article
                   key={active}
-                  className="hero-slide-copy-in grid w-full grid-cols-[auto,minmax(0,1fr)] items-center gap-x-2.5 gap-y-3 sm:gap-x-4 md:gap-x-5"
+                  className="hero-slide-copy-in grid min-w-0 max-w-full grid-cols-1 grid-rows-[auto_auto_auto] gap-x-0 gap-y-3 lg:grid-cols-[auto,minmax(0,1fr)] lg:grid-rows-[auto_auto] lg:items-center lg:gap-x-5 lg:gap-y-3"
                   aria-live="polite"
                 >
-                  <div className="col-start-1 row-start-1 flex shrink-0 items-center">
+                  <div className="col-start-1 row-start-1 flex shrink-0 items-center justify-self-start">
                     <Logo variant="slider" />
                   </div>
-                  <div className="col-start-2 row-start-1 flex min-w-0 items-center">
-                    <h1 className="text-3xl font-bold leading-tight tracking-tight text-neutral-900 min-[400px]:text-4xl sm:text-5xl md:text-6xl">
+                  <div className="col-start-1 row-start-2 min-w-0 max-w-full lg:col-start-2 lg:row-start-1">
+                    <h1 className="min-w-0 max-w-full text-balance break-words text-2xl font-bold leading-tight tracking-tight text-neutral-900 min-[400px]:text-3xl sm:text-4xl lg:text-5xl xl:text-6xl">
                       {slide.title[0]}
                       <br />
                       {slide.title[1]}
                     </h1>
                   </div>
-                  <p className="col-start-2 row-start-2 self-start max-w-lg text-base leading-snug text-neutral-800 sm:text-lg md:text-xl">
+                  <p className="col-start-1 row-start-3 min-w-0 max-w-full self-start text-pretty break-words text-base leading-snug text-neutral-800 sm:text-lg lg:col-start-2 lg:row-start-2 lg:max-w-lg xl:text-xl">
                     {slide.subtitle}
                   </p>
                 </article>
@@ -145,8 +145,8 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
           className="scroll-mt-24 w-full px-page pb-16 pt-0 sm:pb-8"
         >
           {/* Same outer/inner pattern as hero copy: wrapper centers in viewport; inner column is left-aligned */}
-          <div className="relative mx-auto w-full max-w-wrapper">
-            <div className="w-full max-w-3xl lg:max-w-[min(100%,calc(var(--content-wrapper)/2))]">
+          <div className="relative mx-auto w-full min-w-0 max-w-wrapper">
+            <div className="w-full min-w-0 max-w-3xl lg:max-w-[min(100%,calc(var(--content-wrapper)/2))]">
               <BraFitQuiz />
             </div>
           </div>
