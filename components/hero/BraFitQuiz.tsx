@@ -516,7 +516,7 @@ export function BraFitQuiz() {
             </div>
             <div className="min-w-0 flex-1 text-center sm:text-left">
               <p className="mb-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#5a8584]">
-                Find My Fit · Complete
+                Find Your Fit · Complete
               </p>
               <h2 className="mb-1 text-xl font-bold tracking-tight text-neutral-900 sm:text-2xl">
                 You&apos;re all set!
@@ -676,7 +676,7 @@ export function BraFitQuiz() {
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
             <p className="order-2 text-center text-[11px] text-neutral-500 sm:order-1 sm:text-left">
-              Edit contact or retake the quiz anytime.
+              Edit contact or redo Find Your Fit anytime.
             </p>
             <div className="order-1 flex flex-col gap-2 sm:order-2 sm:flex-row">
               <button
@@ -706,7 +706,7 @@ export function BraFitQuiz() {
         {step === 1 && (
           <div className="min-w-0 max-w-full">
             <h2 className="mb-4 max-w-full text-balance break-words text-2xl font-bold leading-tight tracking-tight text-[#2d2c28] sm:mb-5 sm:text-3xl md:text-4xl lg:text-5xl">
-              Find Your Feel-Good Size Quiz
+              Find Your Fit
             </h2>
             <p className="mb-8 max-w-full text-pretty break-words text-base font-bold leading-snug text-[#2d2c28] sm:mb-10 sm:text-lg sm:leading-relaxed md:text-xl lg:text-2xl">
               Tell us where to send your{" "}
@@ -1140,7 +1140,7 @@ export function BraFitQuiz() {
             type="button"
             disabled={!canNext}
             onClick={() => {
-              console.log("Find My Fit submission", quizPayload);
+              console.log("Find Your Fit submission", quizPayload);
               setShowConfirmation(true);
             }}
             className="w-full rounded-full bg-[#E55932] px-10 py-4 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"

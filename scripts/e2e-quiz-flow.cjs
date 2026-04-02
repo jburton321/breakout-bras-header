@@ -11,12 +11,12 @@ async function main() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  const quizBox = page.locator("#find-my-fit-quiz");
+  const quizBox = page.locator("#find-your-fit");
   const next = () => quizBox.getByRole("button", { name: "NEXT", exact: true });
   const pick = (label) => quizBox.locator("button").filter({ hasText: label }).first();
 
   await page.goto(`${base}/`);
-  await page.locator("#find-my-fit-quiz").scrollIntoViewIfNeeded();
+  await page.locator("#find-your-fit").scrollIntoViewIfNeeded();
   await page.waitForSelector("#quiz-first-name", { state: "visible", timeout: 20000 });
 
   // Step 1

@@ -160,10 +160,10 @@ export function HomeImageGallery() {
         </p>
         <div className="mt-8 flex justify-center sm:mt-9">
           <Link
-            href="#find-my-fit-quiz"
+            href="#find-your-fit"
             className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#E55932] px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E55932]"
           >
-            Find My Fit
+            Find Your Fit
           </Link>
         </div>
       </div>

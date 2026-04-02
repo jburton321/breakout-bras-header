@@ -65,10 +65,10 @@ export function BreakoutBrasHeader() {
           </nav>
 
           <Link
-            href="#find-my-fit-quiz"
+            href="#find-your-fit"
             className="shrink-0 rounded-full bg-[#E55932] px-4 py-2 text-sm font-medium text-white transition hover:brightness-[1.03]"
           >
-            Find My Fit
+            Find Your Fit
           </Link>
 
           <div className="flex shrink-0 items-center gap-1 border-l border-black/[0.08] pl-3 lg:pl-4">
@@ -87,10 +87,10 @@ export function BreakoutBrasHeader() {
         {/* Below lg: compact CTA + menu — z-10 so controls stay above glass stacking */}
         <div className="relative z-10 flex items-center gap-2 lg:hidden">
           <Link
-            href="#find-my-fit-quiz"
+            href="#find-your-fit"
             className="rounded-full bg-[#E55932] px-3.5 py-2 text-xs font-semibold text-white transition hover:brightness-[1.03] sm:text-sm"
           >
-            Find My Fit
+            Find Your Fit
           </Link>
           {mobileOpen ? (
             <button

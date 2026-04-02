@@ -53,7 +53,7 @@ export default function RootLayout({
               borderBottom: "1px solid #e6d9a8",
             }}
           >
-            JavaScript is required for the full Breakout Bras experience (quiz, navigation). Enable JavaScript in your
+            JavaScript is required for the full Breakout Bras experience (Find Your Fit, navigation). Enable JavaScript in your
             browser, or open this site in a regular browser window (not a stripped-down preview).
           </div>
         </noscript>

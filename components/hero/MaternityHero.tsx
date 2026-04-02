@@ -23,7 +23,7 @@ const SLIDES: Array<{
     id: "bras",
     title: ["Say Goodbye to", "Bad Bra Days"],
     subtitle:
-      "Find your perfect fit with this quick 1-minute quiz.",
+      "Find your perfect fit in about a minute with Find Your Fit.",
     href: "/bras",
     backgroundImage: "/images/Slide1.png",
   },
@@ -141,7 +141,7 @@ export function MaternityHero({ backgroundImage }: MaternityHeroProps) {
         </div>
 
         <div
-          id="find-my-fit-quiz"
+          id="find-your-fit"
           className="scroll-mt-24 w-full px-page pb-16 pt-0 sm:pb-8"
         >
           {/* Same outer/inner pattern as hero copy: wrapper centers in viewport; inner column is left-aligned */}

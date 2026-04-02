@@ -25,7 +25,7 @@ Avoid `dev:turbopack` on iCloud/Desktop-synced clones unless you need it; webpac
 
 ## Diagnostics: “blank page” / `html` height 0 (verified Mar 2025)
 
-Production and webpack dev both return **full HTML** (~50–65KB) with **linked CSS** and visible SSR content (`<header>`, `<main id="main">`, hero copy, quiz). CSS chunks are **non-empty** (~18–78KB depending on mode).
+Production and webpack dev both return **full HTML** (~50–65KB) with **linked CSS** and visible SSR content (`<header>`, `<main id="main">`, hero copy, Find Your Fit). CSS chunks are **non-empty** (~18–78KB depending on mode).
 
 If a tool still shows **blank** or **`html` height 0**:
 
